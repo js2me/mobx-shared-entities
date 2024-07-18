@@ -13,6 +13,6 @@ export interface PaginationData
   extends ReadOnlyPaginationData,
     InputPaginationData {}
 
-export interface PaginationModelParams extends Partial<PaginationData> {
+export interface MobxPaginationModelParams extends Partial<PaginationData> {
   disposer?: Disposer;
 }

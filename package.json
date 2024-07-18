@@ -8,7 +8,7 @@
     "prebuild": "eslint . --fix",
     "build": "tsc",
     "prepublish": "pnpm run build",
-    "prepub": "pnpm run buld & copy package.json dist",
+    "prepub": "pnpm run build & copy package.json dist",
     "pub": "cd dist & npm publish",
     "postpub": "cd dist & del package.json"
   },

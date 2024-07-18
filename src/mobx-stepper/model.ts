@@ -1,6 +1,6 @@
 import { action, observable } from 'mobx';
 
-export class Stepper<StepData> {
+export class MobxStepper<StepData> {
   @observable
   accessor activeStepIndex = 0;
 

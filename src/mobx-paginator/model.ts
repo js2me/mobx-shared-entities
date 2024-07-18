@@ -4,10 +4,10 @@ import { Disposer, Disposable } from 'mobx-disposer-util';
 import {
   InputPaginationData,
   PaginationData,
-  PaginationModelParams,
+  MobxPaginationModelParams,
 } from './model.types';
 
-export class PaginatorModel implements Disposable {
+export class MobxPaginatorModel implements Disposable {
   private disposer: Disposer;
 
   @observable
@@ -24,7 +24,7 @@ export class PaginatorModel implements Disposable {
     pageSize,
     totalPages,
     disposer,
-  }: PaginationModelParams = {}) {
+  }: MobxPaginationModelParams = {}) {
     this.disposer = disposer ?? new Disposer();
     this.page = page ?? 1;
     this.pageSize = pageSize ?? 10;

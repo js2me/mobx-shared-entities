@@ -1,12 +1,7 @@
 import { action, observable, reaction } from 'mobx';
 import { Disposer, Disposable } from 'mobx-disposer-util';
 
-interface MobxTickerConfig {
-  /**
-   * ms
-   */
-  ticksPer: number;
-}
+import { MobxTickerConfig } from './model.types';
 
 export class MobxTicker implements Disposable {
   private disposer = new Disposer();
