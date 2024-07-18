@@ -1,14 +1,16 @@
 {
   "name": "mobx-shared-entities",
-  "version": "0.0.1",
-  "main": "dist",
+  "version": "0.0.2",
   "files": [
-    "dist"
+    "*"
   ],
   "scripts": {
     "prebuild": "eslint . --fix",
     "build": "tsc",
-    "prepublish": "pnpm run build"
+    "prepublish": "pnpm run build",
+    "prepub": "pnpm run buld & copy package.json dist",
+    "pub": "cd dist & npm publish",
+    "postpub": "cd dist & del package.json"
   },
   "keywords": ["mobx"],
   "author": "js2me",
