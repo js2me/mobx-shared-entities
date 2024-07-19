@@ -7,7 +7,7 @@ import {
   MobxPaginationModelParams,
 } from './model.types';
 
-export class MobxPaginatorModel implements Disposable {
+export class MobxPaginator implements Disposable {
   private disposer: Disposer;
 
   @observable

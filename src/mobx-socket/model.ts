@@ -3,7 +3,7 @@ import { Disposer, Disposable } from 'mobx-disposer-util';
 
 import { MobxSocketModelConfig } from './model.types';
 
-export class MobxSocketModel<
+export class MobxSocket<
   Payload = void,
   InputMessageType = any,
   OutputMessageType = any,
