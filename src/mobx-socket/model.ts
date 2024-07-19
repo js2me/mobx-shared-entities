@@ -1,7 +1,7 @@
 import { action, observable } from 'mobx';
 import { Disposer, Disposable } from 'mobx-disposer-util';
 
-import { MobxSocketModelConfig } from './model.types';
+import { MobxSocketConfig } from './model.types';
 
 export class MobxSocket<
   Payload = void,
@@ -34,7 +34,7 @@ export class MobxSocket<
   private payload?: Payload;
 
   constructor(
-    private config: MobxSocketModelConfig<
+    private config: MobxSocketConfig<
       Payload,
       InputMessageType,
       OutputMessageType

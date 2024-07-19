@@ -4,7 +4,7 @@ interface SocketReconnectConfig {
   skipCodes?: number[];
 }
 
-export interface MobxSocketModelConfig<
+export interface MobxSocketConfig<
   Payload = void,
   InputMessageType = any,
   OutputMessageType = any,
