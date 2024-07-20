@@ -1,6 +1,6 @@
 {
   "name": "mobx-shared-entities",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "files": [
     "*"
   ],
@@ -23,10 +23,9 @@
     "type": "git",
     "url": "git://github.com/js2me/mobx-shared-entities"
   },
-  "dependencies": {
-    "mobx-disposer-util": "latest"
-  },
+  "dependencies": {},
   "peerDependencies": {
+    "mobx-disposer-util": "*",
     "mobx": ">=6.12.4"
   },
   "devDependencies": {
