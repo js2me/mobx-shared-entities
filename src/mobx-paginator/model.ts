@@ -5,6 +5,7 @@ import {
   InputPaginationData,
   PaginationData,
   MobxPaginatorConfig,
+  PaginationOffsetData,
 } from './model.types';
 
 export class MobxPaginator implements Disposable {
@@ -17,18 +18,18 @@ export class MobxPaginator implements Disposable {
   private accessor pageSize: number;
 
   @observable
-  private accessor totalPages: number;
+  private accessor pagesCount: number;
 
   constructor({
     page,
     pageSize,
-    totalPages,
+    pagesCount: totalPages,
     disposer,
   }: MobxPaginatorConfig = {}) {
     this.disposer = disposer ?? new Disposer();
     this.page = page ?? 1;
     this.pageSize = pageSize ?? 10;
-    this.totalPages = totalPages ?? 1;
+    this.pagesCount = totalPages ?? 1;
   }
 
   @computed
@@ -43,7 +44,7 @@ export class MobxPaginator implements Disposable {
   get data(): PaginationData {
     return {
       ...this.inputData,
-      totalPages: this.totalPages,
+      pagesCount: this.pagesCount,
     };
   }
 
@@ -59,7 +60,7 @@ export class MobxPaginator implements Disposable {
 
   @action.bound
   toPage(page: number) {
-    this.page = Math.max(1, Math.min(page, this.totalPages));
+    this.page = Math.max(1, Math.min(page, this.pagesCount));
   }
 
   @action.bound
@@ -70,7 +71,7 @@ export class MobxPaginator implements Disposable {
 
   @action.bound
   setTotalPages(totalPages: number) {
-    this.totalPages = totalPages;
+    this.pagesCount = totalPages;
   }
 
   @action.bound
@@ -82,11 +83,11 @@ export class MobxPaginator implements Disposable {
     this.disposer.add(
       reaction(
         getParamsFn,
-        ({ pageSize, page, totalPages }) => {
+        ({ pageSize, page, pagesCount: totalPages }) => {
           runInAction(() => {
             this.pageSize = pageSize ?? this.pageSize;
             this.page = page ?? this.page;
-            this.totalPages = totalPages ?? this.totalPages;
+            this.pagesCount = totalPages ?? this.pagesCount;
           });
         },
         {
@@ -94,6 +95,34 @@ export class MobxPaginator implements Disposable {
         },
       ),
     );
+  }
+
+  fromOffsetData({
+    offset,
+    limit,
+    count,
+  }: PaginationOffsetData): PaginationData {
+    const page = Math.floor(offset / limit) + 1;
+    const pagesCount = Math.ceil(count / limit);
+    const pageSize = limit;
+
+    return {
+      pagesCount,
+      page,
+      pageSize,
+    };
+  }
+
+  toOffsetData({
+    pageSize,
+    pagesCount,
+    page,
+  }: PaginationData): PaginationOffsetData {
+    return {
+      limit: pageSize,
+      count: pagesCount * pageSize,
+      offset: (page - 1) * pageSize,
+    };
   }
 
   dispose(): void {

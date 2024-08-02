@@ -1,12 +1,18 @@
 import { Disposer } from 'mobx-disposer-util';
 
 export interface ReadOnlyPaginationData {
-  totalPages: number;
+  pagesCount: number;
 }
 
 export interface InputPaginationData {
   page: number;
   pageSize: number;
+}
+
+export interface PaginationOffsetData {
+  count: number;
+  offset: number;
+  limit: number;
 }
 
 export interface PaginationData
