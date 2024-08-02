@@ -97,7 +97,7 @@ export class MobxPaginator implements Disposable {
     );
   }
 
-  fromOffsetData({
+  createFromOffsetData({
     offset,
     limit,
     count,
@@ -113,7 +113,7 @@ export class MobxPaginator implements Disposable {
     };
   }
 
-  toOffsetData({
+  createOffsetData({
     pageSize,
     pagesCount,
     page,
@@ -123,6 +123,10 @@ export class MobxPaginator implements Disposable {
       count: pagesCount * pageSize,
       offset: (page - 1) * pageSize,
     };
+  }
+
+  toOffsetData(): PaginationOffsetData {
+    return this.createOffsetData(this.data);
   }
 
   dispose(): void {
