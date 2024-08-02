@@ -17,19 +17,24 @@ export class MobxPaginator implements Disposable {
   @observable
   private accessor pageSize: number;
 
+  @observable.ref
+  private accessor pageSizes: number[];
+
   @observable
   private accessor pagesCount: number;
 
   constructor({
     page,
     pageSize,
-    pagesCount: totalPages,
+    pagesCount,
+    pageSizes,
     disposer,
-  }: MobxPaginatorConfig = {}) {
+  }: MobxPaginatorConfig) {
     this.disposer = disposer ?? new Disposer();
     this.page = page ?? 1;
     this.pageSize = pageSize ?? 10;
-    this.pagesCount = totalPages ?? 1;
+    this.pagesCount = pagesCount ?? 1;
+    this.pageSizes = pageSizes;
   }
 
   @computed
@@ -70,8 +75,13 @@ export class MobxPaginator implements Disposable {
   }
 
   @action.bound
-  setTotalPages(totalPages: number) {
-    this.pagesCount = totalPages;
+  setPagesCount(pagesCount: number) {
+    this.pagesCount = pagesCount;
+  }
+
+  @action.bound
+  setPageSizes(pageSizes: number[]) {
+    this.pageSizes = pageSizes;
   }
 
   @action.bound

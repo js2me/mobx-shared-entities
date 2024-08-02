@@ -21,4 +21,5 @@ export interface PaginationData
 
 export interface MobxPaginatorConfig extends Partial<PaginationData> {
   disposer?: Disposer;
+  pageSizes: number[];
 }
