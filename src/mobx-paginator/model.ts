@@ -18,7 +18,7 @@ export class MobxPaginator implements Disposable {
   private accessor pageSize: number;
 
   @observable.ref
-  private accessor pageSizes: number[];
+  accessor pageSizes: number[];
 
   @observable
   private accessor pagesCount: number;
