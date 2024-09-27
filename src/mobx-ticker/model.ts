@@ -1,5 +1,5 @@
+import { Disposer, Disposable } from 'disposer-util';
 import { action, observable, reaction } from 'mobx';
-import { Disposer, Disposable } from 'mobx-disposer-util';
 
 import { MobxTickerConfig } from './model.types';
 

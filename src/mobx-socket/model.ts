@@ -1,5 +1,5 @@
+import { Disposer, Disposable } from 'disposer-util';
 import { action, observable } from 'mobx';
-import { Disposer, Disposable } from 'mobx-disposer-util';
 
 import { MobxSocketConfig } from './model.types';
 

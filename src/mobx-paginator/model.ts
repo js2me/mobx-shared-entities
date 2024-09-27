@@ -1,5 +1,5 @@
+import { Disposer, Disposable } from 'disposer-util';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
-import { Disposer, Disposable } from 'mobx-disposer-util';
 
 import {
   InputPaginationData,

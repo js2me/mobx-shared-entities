@@ -1,4 +1,4 @@
-import { Disposer } from 'mobx-disposer-util';
+import { Disposer } from 'disposer-util';
 
 export interface ReadOnlyPaginationData {
   pagesCount: number;
