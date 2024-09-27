@@ -25,7 +25,7 @@
   },
   "dependencies": {},
   "peerDependencies": {
-    "disposer-util": "*",
+    "disposer-util": "^1.0.2",
     "mobx": ">=6.12.4"
   },
   "devDependencies": {

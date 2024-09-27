@@ -1,4 +1,4 @@
-import { Disposer, Disposable } from 'disposer-util';
+import { Disposer, Disposable, IDisposer } from 'disposer-util';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 
 import {
@@ -9,7 +9,7 @@ import {
 } from './model.types';
 
 export class MobxPaginator implements Disposable {
-  private disposer: Disposer;
+  private disposer: IDisposer;
 
   @observable
   private accessor page: number;

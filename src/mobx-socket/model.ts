@@ -1,4 +1,4 @@
-import { Disposer, Disposable } from 'disposer-util';
+import { Disposer, Disposable, IDisposer } from 'disposer-util';
 import { action, observable } from 'mobx';
 
 import { MobxSocketConfig } from './model.types';
@@ -9,7 +9,7 @@ export class MobxSocket<
   OutputMessageType = any,
 > implements Disposable
 {
-  private disposer = new Disposer();
+  private disposer: IDisposer;
   private instance: WebSocket | null = null;
 
   @observable
@@ -40,6 +40,7 @@ export class MobxSocket<
       OutputMessageType
     >,
   ) {
+    this.disposer = config.disposer || new Disposer();
     this.serializeOutputMessage =
       this.config.serializeOutputMessage ||
       ((message) => JSON.stringify(message));

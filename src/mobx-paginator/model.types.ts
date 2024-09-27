@@ -1,4 +1,4 @@
-import { Disposer } from 'disposer-util';
+import { IDisposer } from 'disposer-util';
 
 export interface ReadOnlyPaginationData {
   pagesCount: number;
@@ -20,6 +20,6 @@ export interface PaginationData
     InputPaginationData {}
 
 export interface MobxPaginatorConfig extends Partial<PaginationData> {
-  disposer?: Disposer;
+  disposer?: IDisposer;
   pageSizes: number[];
 }

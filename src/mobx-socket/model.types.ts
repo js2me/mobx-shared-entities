@@ -1,3 +1,5 @@
+import { IDisposer } from 'disposer-util';
+
 interface SocketReconnectConfig {
   enabled: boolean;
   timeout?: number;
@@ -12,6 +14,7 @@ export interface MobxSocketConfig<
   url: string | ((payload: Payload | undefined) => string);
   defaultCloseCode?: number;
   protocols?: string[];
+  disposer?: IDisposer;
   parseMessage?: (message: any) => Payload;
   serializeOutputMessage?: (
     message: OutputMessageType,
