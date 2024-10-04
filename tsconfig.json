@@ -2,7 +2,6 @@
   "compilerOptions": {
     "types": [],
     "target": "ES2018",
-    "outDir": "dist",
     "declaration": true,
     "declarationMap": true,
     "useDefineForClassFields": true,
@@ -14,7 +13,7 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "Node", 
     "resolveJsonModule": true,
     "isolatedModules": true,
     "typeRoots": [
