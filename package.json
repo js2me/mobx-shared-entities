@@ -1,15 +1,18 @@
 {
   "name": "mobx-shared-entities",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "files": [
     "*"
   ],
   "scripts": {
-    "prebuild": "eslint . --fix",
-    "build": "node ./build.mjs",
+    "clean": "rimraf dist",
+
+    "prebuild": "npm run clean && eslint . --fix",
+    "build": "tsc",
+    "postbuild": "node ./post-build.mjs",
     "prepub": "pnpm run build",
-    "pub": "cd tmp && npm publish",
-    "postpub": "rimraf tmp"
+    "pub": "cd dist && npm publish",
+    "postpub": "npm run clean"
   },
   "keywords": ["mobx"],
   "author": "js2me",
