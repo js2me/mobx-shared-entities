@@ -14,4 +14,3 @@ nginx.conf
 jsconfig.json
 *.json
 .eslintrc.js
-tmp
