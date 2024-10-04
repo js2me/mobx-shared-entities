@@ -5,11 +5,11 @@
     "*"
   ],
   "scripts": {
-    "prebuild": "rimraf dist & eslint . --fix",
-    "build": "tsc",
-    "prepub": "pnpm run build && cp package.json dist && cp README.md dist && cp LICENSE dist",
-    "pub": "cd dist && npm publish",
-    "postpub": "rimraf dist"
+    "prebuild": "eslint . --fix",
+    "build": "node ./build.mjs",
+    "prepub": "pnpm run build",
+    "pub": "cd tmp && npm publish",
+    "postpub": "rimraf tmp"
   },
   "keywords": ["mobx"],
   "author": "js2me",
