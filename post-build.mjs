@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { execSync } from 'child_process';
-import fs from 'fs';
+import fs, { lstatSync } from 'fs';
+import path from 'path';
 
 //#region утилиты
 const $ = (cmd) => execSync(cmd, { stdio: 'inherit' });
@@ -11,29 +12,58 @@ const writeFile = (file, content) => fs.writeFileSync(file, content);
 
 $(`cp -r LICENSE dist`);
 
-const exportsConfig = {
-  './package.json': './package.json',
-};
+const lookupExportsMap = (targetPath, exportsMap) => {
+  exportsMap = exportsMap || {};
 
-scanDir('src').forEach((entityName) => {
-  exportsConfig[`./${entityName}`] = {
-    import: `./${entityName}/index.js`,
-    types: `./${entityName}/index.d.ts`,
-  };
-});
+  const pathstat = lstatSync(targetPath);
+
+  if (pathstat.isDirectory()) {
+    const subdirs = scanDir(targetPath);
+
+    subdirs.forEach((subdir) => {
+      lookupExportsMap(`${targetPath}/${subdir}`, exportsMap);
+    });
+  } else {
+    const ext = path.extname(targetPath);
+
+    const fixedPath = targetPath.replace(ext, '').replace('src/', '');
+
+    if (ext === '.ts' || ext === '.tsx') {
+      if (fixedPath === 'index') {
+        exportsMap[`.`] = {
+          import: `./${fixedPath}.js`,
+          types: `./${fixedPath}.d.ts`,
+        };
+      } else if (fixedPath.endsWith('/index')) {
+        exportsMap[`${fixedPath.split('/').slice(0, -1).join('/')}`] = {
+          import: `./${fixedPath}.js`,
+          types: `./${fixedPath}.d.ts`,
+        };
+      } else {
+        exportsMap[`${fixedPath}`] = {
+          import: `./${fixedPath}.js`,
+          types: `./${fixedPath}.d.ts`,
+        };
+      }
+    } else {
+      exportsMap[`${fixedPath}`] = `./${fixedPath}${ext}`;
+    }
+  }
+
+  return exportsMap;
+};
 
 writeFile(
   'dist/package.json',
   JSON.stringify(
     {
       ...JSON.parse(readFile('package.json')),
-      exports: exportsConfig,
+      exports: {
+        './package.json': './package.json',
+        ...lookupExportsMap('src'),
+      },
     },
     null,
     2,
   ),
 );
-
-// execSync(`mkdir -p typings`, { stdio: 'inherit' });
-// execSync(`cp src/lib/types.ts typings/index.d.ts`, { stdio: 'inherit' });
-// execSync(`sed -i 's/^export type/type/' typings/index.d.ts`, { stdio: 'inherit' });
