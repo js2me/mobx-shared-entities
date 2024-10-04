@@ -1,11 +1,9 @@
-import { action, observable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 
 export class MobxStepper<StepData> {
-  @observable
-  accessor activeStepIndex = 0;
+  activeStepIndex = 0;
 
-  @observable
-  accessor steps: StepData[] = [];
+  steps: StepData[] = [];
 
   get activeStep() {
     return this.steps[this.activeStepIndex];
@@ -13,9 +11,16 @@ export class MobxStepper<StepData> {
 
   constructor({ steps = [] }: { steps?: StepData[] }) {
     this.steps = steps;
+
+    makeObservable(this, {
+      activeStepIndex: observable,
+      steps: observable,
+      goToStep: action.bound,
+      nextStep: action.bound,
+      prevStep: action.bound,
+    });
   }
 
-  @action.bound
   goToStep(nextStepIndex: number) {
     this.activeStepIndex = Math.max(
       0,
@@ -23,12 +28,10 @@ export class MobxStepper<StepData> {
     );
   }
 
-  @action.bound
   nextStep() {
     this.goToStep(this.activeStepIndex + 1);
   }
 
-  @action.bound
   prevStep() {
     this.goToStep(this.activeStepIndex - 1);
   }

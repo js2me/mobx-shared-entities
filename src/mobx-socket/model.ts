@@ -1,5 +1,5 @@
 import { Disposer, Disposable, IDisposer } from 'disposer-util';
-import { action, observable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 
 import { MobxSocketConfig } from './model.types';
 
@@ -12,14 +12,11 @@ export class MobxSocket<
   private disposer: IDisposer;
   private instance: WebSocket | null = null;
 
-  @observable
-  accessor isOpen = false;
+  isOpen = false;
 
-  @observable.ref
-  accessor message: InputMessageType | null = null;
+  message: InputMessageType | null = null;
 
-  @observable
-  accessor isReconnectEnabled = false;
+  isReconnectEnabled = false;
 
   protected serializeOutputMessage: (
     message: OutputMessageType,
@@ -51,6 +48,14 @@ export class MobxSocket<
     this.isReconnectEnabled = !!this.config.reconnect?.enabled;
     this.skipReconnectCodes = this.config.reconnect?.skipCodes ?? [1001, 1005];
     this.reconnectTimeout = this.config.reconnect?.timeout ?? 1000;
+
+    makeObservable<this, 'refreshSocketState'>(this, {
+      isOpen: observable.ref,
+      message: observable.ref,
+      isReconnectEnabled: observable.ref,
+      onSocketMessage: action,
+      refreshSocketState: action,
+    });
   }
 
   resendNotSentMessages = () => {
@@ -113,7 +118,6 @@ export class MobxSocket<
     this.instance?.close(code ?? this.defaultCloseCode);
   };
 
-  @action.bound
   onSocketMessage = (message: MessageEvent<any>) => {
     try {
       this.message = this.deserializeInputMessage(message.data);
@@ -161,7 +165,6 @@ export class MobxSocket<
       : this.config.url;
   };
 
-  @action
   private refreshSocketState = () => {
     this.isOpen =
       !!this.instance && this.instance.readyState === WebSocket.OPEN;

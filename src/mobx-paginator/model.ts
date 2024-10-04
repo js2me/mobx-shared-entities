@@ -1,5 +1,12 @@
 import { Disposer, Disposable, IDisposer } from 'disposer-util';
-import { action, computed, observable, reaction, runInAction } from 'mobx';
+import {
+  action,
+  computed,
+  makeObservable,
+  observable,
+  reaction,
+  runInAction,
+} from 'mobx';
 
 import {
   InputPaginationData,
@@ -11,17 +18,13 @@ import {
 export class MobxPaginator implements Disposable {
   private disposer: IDisposer;
 
-  @observable
-  private accessor page: number;
+  private page: number;
 
-  @observable
-  private accessor pageSize: number;
+  private pageSize: number;
 
-  @observable.ref
-  accessor pageSizes: number[];
+  pageSizes: number[];
 
-  @observable
-  private accessor pagesCount: number;
+  private pagesCount: number;
 
   constructor({
     page,
@@ -35,9 +38,24 @@ export class MobxPaginator implements Disposable {
     this.pageSize = pageSize ?? 10;
     this.pagesCount = pagesCount ?? 1;
     this.pageSizes = pageSizes;
+
+    makeObservable<this, 'page' | 'pageSize' | 'pagesCount'>(this, {
+      page: observable.ref,
+      pageSize: observable.ref,
+      pageSizes: observable.ref,
+      pagesCount: observable.ref,
+      inputData: computed,
+      data: computed,
+      toPreviousPage: action.bound,
+      toNextPage: action.bound,
+      toPage: action.bound,
+      setPageSize: action.bound,
+      setPagesCount: action.bound,
+      setPageSizes: action.bound,
+      reset: action.bound,
+    });
   }
 
-  @computed
   get inputData(): InputPaginationData {
     return {
       page: this.page,
@@ -45,7 +63,6 @@ export class MobxPaginator implements Disposable {
     };
   }
 
-  @computed
   get data(): PaginationData {
     return {
       ...this.inputData,
@@ -53,38 +70,31 @@ export class MobxPaginator implements Disposable {
     };
   }
 
-  @action.bound
   toPreviousPage() {
     this.toPage(this.page - 1);
   }
 
-  @action.bound
   toNextPage() {
     this.toPage(this.page + 1);
   }
 
-  @action.bound
   toPage(page: number) {
     this.page = Math.max(1, Math.min(page, this.pagesCount));
   }
 
-  @action.bound
   setPageSize(pageSize: number) {
     this.pageSize = pageSize;
     this.reset();
   }
 
-  @action.bound
   setPagesCount(pagesCount: number) {
     this.pagesCount = pagesCount;
   }
 
-  @action.bound
   setPageSizes(pageSizes: number[]) {
     this.pageSizes = pageSizes;
   }
 
-  @action.bound
   reset() {
     this.toPage(1);
   }

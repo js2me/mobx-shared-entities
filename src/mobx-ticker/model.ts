@@ -1,5 +1,5 @@
 import { Disposer, Disposable, IDisposer } from 'disposer-util';
-import { action, observable, reaction } from 'mobx';
+import { action, makeObservable, observable, reaction } from 'mobx';
 
 import { MobxTickerConfig } from './model.types';
 
@@ -7,32 +7,36 @@ export class MobxTicker implements Disposable {
   private disposer: IDisposer;
   private intervalId: number | null;
 
-  @observable
-  accessor ticks: number = 0;
+  ticks: number = 0;
 
-  @observable
-  accessor ticksPer: number;
+  ticksPer: number;
 
   constructor(config: MobxTickerConfig) {
     this.disposer = config.disposer || new Disposer();
     this.ticksPer = config.ticksPer;
     this.intervalId = null;
 
+    makeObservable<this, 'tick'>(this, {
+      ticks: observable,
+      ticksPer: observable,
+      tick: action.bound,
+      start: action.bound,
+      stop: action.bound,
+      reset: action.bound,
+    });
+
     this.disposer.add(reaction(() => this.ticksPer, this.start));
   }
 
-  @action.bound
   private tick() {
     this.ticks++;
   }
 
-  @action.bound
   start() {
     this.reset();
     this.intervalId = setInterval(this.tick, this.ticksPer);
   }
 
-  @action.bound
   stop() {
     if (this.intervalId !== null) {
       clearInterval(this.intervalId);
@@ -40,7 +44,6 @@ export class MobxTicker implements Disposable {
     this.intervalId = null;
   }
 
-  @action.bound
   reset() {
     this.stop();
     this.ticks = 0;

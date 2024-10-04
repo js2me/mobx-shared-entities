@@ -1,5 +1,6 @@
 import { Disposable, Disposer, IDisposer } from 'disposer-util';
 import {
+  action,
   autorun,
   computed,
   makeObservable,
@@ -25,6 +26,7 @@ export class MobxTabManager<T extends MobxTabManagerItem>
     makeObservable<this, 'syncedActiveTab' | 'tabsMap'>(this, {
       syncedActiveTab: observable.ref,
       tabsMap: computed,
+      setTabs: action,
       tabs: observable.ref,
     });
 
@@ -40,6 +42,7 @@ export class MobxTabManager<T extends MobxTabManagerItem>
       );
     }
   }
+
   private get tabsMap() {
     return this.tabs.reduce<Record<T['id'], T>>(
       (acc, tab) => {
@@ -56,6 +59,10 @@ export class MobxTabManager<T extends MobxTabManagerItem>
       return this.config.tabs();
     }
     return this.config.tabs;
+  };
+
+  setTabs = (tabs: T[]) => {
+    this.tabs = tabs;
   };
 
   getTabData = (tabId: T['id']): T => {
