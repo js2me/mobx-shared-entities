@@ -1,9 +1,8 @@
 {
   "name": "mobx-shared-entities",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "scripts": {
     "clean": "rimraf dist",
-
     "prebuild": "npm run clean && eslint . --fix",
     "build": "tsc",
     "postbuild": "node ./post-build.mjs",
@@ -11,7 +10,9 @@
     "pub": "cd dist && npm publish",
     "postpub": "npm run clean"
   },
-  "keywords": ["mobx"],
+  "keywords": [
+    "mobx"
+  ],
   "author": "js2me",
   "license": "MIT",
   "description": "",
@@ -23,7 +24,6 @@
     "type": "git",
     "url": "git://github.com/js2me/mobx-shared-entities"
   },
-  "dependencies": {},
   "peerDependencies": {
     "disposer-util": "^1.0.2",
     "mobx": ">=6.12.4"
@@ -31,6 +31,7 @@
   "devDependencies": {
     "@types/node": "20.14.5",
     "eslint": "8.57.0",
+    "exports-post-build-script": "github:js2me/exports-post-build-script",
     "js2me-eslint-config": "1.0.0",
     "rimraf": "6.0.1",
     "typescript": "5.4.5"
