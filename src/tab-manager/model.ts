@@ -1,12 +1,5 @@
 import { Disposable, Disposer, IDisposer } from 'disposer-util';
-import {
-  action,
-  autorun,
-  computed,
-  makeObservable,
-  observable,
-  runInAction,
-} from 'mobx';
+import { action, autorun, makeObservable, observable, runInAction } from 'mobx';
 
 import { TabManagerConfig, TabManagerItem } from './model.types';
 
@@ -23,9 +16,8 @@ export class TabManager<T extends TabManagerItem> implements Disposable {
 
     this.setTabs(this.getTabs());
 
-    makeObservable<this, 'syncedActiveTab' | 'tabsMap'>(this, {
+    makeObservable<this, 'syncedActiveTab'>(this, {
       syncedActiveTab: observable.ref,
-      tabsMap: computed,
       setTabs: action,
       tabs: observable.ref,
     });
