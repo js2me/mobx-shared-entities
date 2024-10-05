@@ -8,20 +8,20 @@ import {
   runInAction,
 } from 'mobx';
 
-import { MobxTabManagerConfig, MobxTabManagerItem } from './model.types';
+import { TabManagerConfig, TabManagerItem } from './model.types';
 
-export class MobxTabManager<T extends MobxTabManagerItem>
-  implements Disposable
-{
+export class TabManager<T extends TabManagerItem> implements Disposable {
   private disposer: IDisposer;
 
   private syncedActiveTab!: T['id'];
 
-  tabs: T[];
+  tabs!: T[];
+  tabsMap!: Map<T['id'], T>;
 
-  constructor(private config: MobxTabManagerConfig<T>) {
+  constructor(private config: TabManagerConfig<T>) {
     this.disposer = config.disposer ?? new Disposer();
-    this.tabs = this.getTabs();
+
+    this.setTabs(this.getTabs());
 
     makeObservable<this, 'syncedActiveTab' | 'tabsMap'>(this, {
       syncedActiveTab: observable.ref,
@@ -33,25 +33,10 @@ export class MobxTabManager<T extends MobxTabManagerItem>
     if (typeof this.config.tabs === 'function') {
       this.disposer.add(
         autorun(() => {
-          const tabs = this.getTabs();
-
-          runInAction(() => {
-            this.tabs = tabs;
-          });
+          this.setTabs(this.getTabs());
         }),
       );
     }
-  }
-
-  private get tabsMap() {
-    return this.tabs.reduce<Record<T['id'], T>>(
-      (acc, tab) => {
-        const tabId = tab.id as any as T['id'];
-        acc[tabId] = tab;
-        return acc;
-      },
-      {} as Record<T['id'], T>,
-    );
   }
 
   private getTabs = () => {
@@ -63,10 +48,14 @@ export class MobxTabManager<T extends MobxTabManagerItem>
 
   setTabs = (tabs: T[]) => {
     this.tabs = tabs;
+
+    this.tabsMap = observable.map<T['id'], T>(
+      this.tabs.map((tab) => [tab.id, tab]),
+    );
   };
 
   getTabData = (tabId: T['id']): T => {
-    return this.tabsMap[tabId];
+    return this.tabsMap.get(tabId)!;
   };
 
   get activeTab() {

@@ -1,9 +1,9 @@
 import { Disposer, Disposable, IDisposer } from 'disposer-util';
 import { action, makeObservable, observable, reaction } from 'mobx';
 
-import { MobxTickerConfig } from './model.types';
+import { TickerConfig } from './model.types';
 
-export class MobxTicker implements Disposable {
+export class Ticker implements Disposable {
   private disposer: IDisposer;
   private intervalId: number | null;
 
@@ -11,7 +11,7 @@ export class MobxTicker implements Disposable {
 
   ticksPer: number;
 
-  constructor(config: MobxTickerConfig) {
+  constructor(config: TickerConfig) {
     this.disposer = config.disposer || new Disposer();
     this.ticksPer = config.ticksPer;
     this.intervalId = null;

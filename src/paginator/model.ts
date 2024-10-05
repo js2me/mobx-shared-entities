@@ -11,11 +11,11 @@ import {
 import {
   InputPaginationData,
   PaginationData,
-  MobxPaginatorConfig,
+  PaginatorConfig,
   PaginationOffsetData,
 } from './model.types';
 
-export class MobxPaginator implements Disposable {
+export class Paginator implements Disposable {
   private disposer: IDisposer;
 
   private page: number;
@@ -32,7 +32,7 @@ export class MobxPaginator implements Disposable {
     pagesCount,
     pageSizes,
     disposer,
-  }: MobxPaginatorConfig) {
+  }: PaginatorConfig) {
     this.disposer = disposer ?? new Disposer();
     this.page = page ?? 1;
     this.pageSize = pageSize ?? 10;
@@ -99,10 +99,10 @@ export class MobxPaginator implements Disposable {
     this.toPage(1);
   }
 
-  syncWith(getParamsFn: () => Partial<PaginationData>) {
+  syncWith(getParametersFunction: () => Partial<PaginationData>) {
     this.disposer.add(
       reaction(
-        getParamsFn,
+        getParametersFunction,
         ({ pageSize, page, pagesCount: totalPages }) => {
           runInAction(() => {
             this.pageSize = pageSize ?? this.pageSize;

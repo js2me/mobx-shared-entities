@@ -1,6 +1,6 @@
 import { IDisposer } from 'disposer-util';
 
-export interface MobxTickerConfig {
+export interface TickerConfig {
   /**
    * ms
    */

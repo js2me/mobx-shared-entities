@@ -1,9 +1,9 @@
 import { Disposer, Disposable, IDisposer } from 'disposer-util';
 import { action, makeObservable, observable } from 'mobx';
 
-import { MobxSocketConfig } from './model.types';
+import { SocketConfig } from './model.types';
 
-export class MobxSocket<
+export class Socket<
   Payload = void,
   InputMessageType = any,
   OutputMessageType = any,
@@ -31,11 +31,7 @@ export class MobxSocket<
   private payload?: Payload;
 
   constructor(
-    private config: MobxSocketConfig<
-      Payload,
-      InputMessageType,
-      OutputMessageType
-    >,
+    private config: SocketConfig<Payload, InputMessageType, OutputMessageType>,
   ) {
     this.disposer = config.disposer || new Disposer();
     this.serializeOutputMessage =
@@ -72,9 +68,11 @@ export class MobxSocket<
   };
 
   open = (
-    ...args: Payload extends void ? [payload?: Payload] : [payload: Payload]
+    ...arguments_: Payload extends void
+      ? [payload?: Payload]
+      : [payload: Payload]
   ) => {
-    this.payload = args[0];
+    this.payload = arguments_[0];
 
     this.instance = new WebSocket(
       this.getSocketUrl(this.payload!),
@@ -91,7 +89,7 @@ export class MobxSocket<
   protected reconnectTimer?: number;
 
   protected scheduleReconnect = () => {
-    if (this.reconnectTimer != null) {
+    if (this.reconnectTimer != undefined) {
       clearTimeout(this.reconnectTimer);
     }
 
@@ -121,13 +119,13 @@ export class MobxSocket<
   onSocketMessage = (message: MessageEvent<any>) => {
     try {
       this.message = this.deserializeInputMessage(message.data);
-    } catch (e) {
+    } catch (error) {
       console.error(
         'failed to parse socket message data:\n',
         message.data,
         '\n',
         'error:',
-        e,
+        error,
       );
     }
 
@@ -135,10 +133,11 @@ export class MobxSocket<
   };
 
   onSocketClose = (event: CloseEvent) => {
-    if (this.isReconnectEnabled) {
-      if (!this.skipReconnectCodes.includes(event.code)) {
-        this.scheduleReconnect();
-      }
+    if (
+      this.isReconnectEnabled &&
+      !this.skipReconnectCodes.includes(event.code)
+    ) {
+      this.scheduleReconnect();
     }
 
     this.refreshSocketState();
@@ -150,10 +149,12 @@ export class MobxSocket<
   };
 
   onSocketError = (event: Event) => {
-    if (this.isReconnectEnabled) {
-      if ('code' in event && event.code === 'ECONNREFUSED') {
-        this.scheduleReconnect();
-      }
+    if (
+      this.isReconnectEnabled &&
+      'code' in event &&
+      event.code === 'ECONNREFUSED'
+    ) {
+      this.scheduleReconnect();
     }
 
     this.refreshSocketState();

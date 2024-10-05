@@ -1,6 +1,8 @@
 import { action, makeObservable, observable } from 'mobx';
 
-export class MobxStepper<StepData> {
+import { StepperConfig } from './model.types';
+
+export class Stepper<StepData> {
   activeStepIndex = 0;
 
   steps: StepData[] = [];
@@ -9,16 +11,21 @@ export class MobxStepper<StepData> {
     return this.steps[this.activeStepIndex];
   }
 
-  constructor({ steps = [] }: { steps?: StepData[] }) {
+  constructor({ steps = [] }: StepperConfig<StepData>) {
     this.steps = steps;
 
     makeObservable(this, {
       activeStepIndex: observable,
       steps: observable,
+      setSteps: action.bound,
       goToStep: action.bound,
       nextStep: action.bound,
       prevStep: action.bound,
     });
+  }
+
+  setSteps(steps: StepData[]) {
+    this.steps = steps;
   }
 
   goToStep(nextStepIndex: number) {

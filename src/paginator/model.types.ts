@@ -19,7 +19,7 @@ export interface PaginationData
   extends ReadOnlyPaginationData,
     InputPaginationData {}
 
-export interface MobxPaginatorConfig extends Partial<PaginationData> {
+export interface PaginatorConfig extends Partial<PaginationData> {
   disposer?: IDisposer;
   pageSizes: number[];
 }
