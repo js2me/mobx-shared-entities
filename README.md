@@ -1,6 +1,3 @@
-[![npm](https://img.shields.io/npm/v/mobx-shared-entities)](https://www.npmjs.com/package/mobx-shared-entities) 
-[![license](https://img.shields.io/npm/l/mobx-shared-entities)](https://github.com/js2me/mobx-shared-entities/blob/master/LICENSE)  
-
 # mobx-shared-entities  
 
 # [Paginator](src/paginator/model.ts)  
