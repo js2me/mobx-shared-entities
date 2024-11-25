@@ -1,4 +1,5 @@
-import { Disposer, Disposable, IDisposer } from 'disposer-util';
+import { Disposable } from 'disposer-util';
+import { LinkedAbortController } from 'linked-abort-controller';
 import {
   action,
   computed,
@@ -16,8 +17,7 @@ import {
 } from './model.types';
 
 export class Paginator implements Disposable {
-  private disposer: IDisposer;
-
+  private abortController: AbortController;
   private page: number;
 
   private pageSize: number;
@@ -31,9 +31,18 @@ export class Paginator implements Disposable {
     pageSize,
     pagesCount,
     pageSizes,
+    // eslint-disable-next-line sonarjs/deprecation
     disposer,
+    abortSignal,
   }: PaginatorConfig) {
-    this.disposer = disposer ?? new Disposer();
+    this.abortController = new LinkedAbortController(abortSignal);
+
+    if (disposer) {
+      disposer.add(() => {
+        this.abortController.abort();
+      });
+    }
+
     this.page = page ?? 1;
     this.pageSize = pageSize ?? 10;
     this.pagesCount = pagesCount ?? 1;
@@ -100,20 +109,19 @@ export class Paginator implements Disposable {
   }
 
   syncWith(getParametersFunction: () => Partial<PaginationData>) {
-    this.disposer.add(
-      reaction(
-        getParametersFunction,
-        ({ pageSize, page, pagesCount: totalPages }) => {
-          runInAction(() => {
-            this.pageSize = pageSize ?? this.pageSize;
-            this.page = page ?? this.page;
-            this.pagesCount = totalPages ?? this.pagesCount;
-          });
-        },
-        {
-          fireImmediately: true,
-        },
-      ),
+    reaction(
+      getParametersFunction,
+      ({ pageSize, page, pagesCount: totalPages }) => {
+        runInAction(() => {
+          this.pageSize = pageSize ?? this.pageSize;
+          this.page = page ?? this.page;
+          this.pagesCount = totalPages ?? this.pagesCount;
+        });
+      },
+      {
+        fireImmediately: true,
+        signal: this.abortController.signal,
+      },
     );
   }
 
@@ -150,6 +158,6 @@ export class Paginator implements Disposable {
   }
 
   dispose(): void {
-    this.disposer.dispose();
+    this.abortController.abort();
   }
 }

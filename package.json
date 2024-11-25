@@ -24,6 +24,9 @@
     "type": "git",
     "url": "git://github.com/js2me/mobx-shared-entities"
   },
+  "dependencies": {
+    "linked-abort-controller": "^1.0.2"
+  },
   "peerDependencies": {
     "disposer-util": "^1.0.2",
     "mobx": ">=6.12.4"

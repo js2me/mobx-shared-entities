@@ -20,6 +20,10 @@ export interface PaginationData
     InputPaginationData {}
 
 export interface PaginatorConfig extends Partial<PaginationData> {
+  /**
+   * @deprecated please use {abortSignal} instead
+   */
   disposer?: IDisposer;
+  abortSignal?: AbortSignal;
   pageSizes: number[];
 }

@@ -6,5 +6,9 @@ export interface TickerConfig {
    */
   ticksPer: number;
 
+  /**
+   * @deprecated please use {abortSignal} instead
+   */
   disposer?: IDisposer;
+  abortSignal?: AbortSignal;
 }

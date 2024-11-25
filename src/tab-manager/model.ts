@@ -1,10 +1,11 @@
-import { Disposable, Disposer, IDisposer } from 'disposer-util';
+import { Disposable } from 'disposer-util';
+import { LinkedAbortController } from 'linked-abort-controller';
 import { action, autorun, makeObservable, observable, runInAction } from 'mobx';
 
 import { TabManagerConfig, TabManagerItem } from './model.types';
 
 export class TabManager<T extends TabManagerItem> implements Disposable {
-  private disposer: IDisposer;
+  private abortController: AbortController;
 
   private syncedActiveTab!: T['id'];
 
@@ -12,7 +13,15 @@ export class TabManager<T extends TabManagerItem> implements Disposable {
   tabsMap!: Map<T['id'], T>;
 
   constructor(private config: TabManagerConfig<T>) {
-    this.disposer = config.disposer ?? new Disposer();
+    this.abortController = new LinkedAbortController(config.abortSignal);
+
+    // eslint-disable-next-line sonarjs/deprecation
+    if (config.disposer) {
+      // eslint-disable-next-line sonarjs/deprecation
+      config.disposer.add(() => {
+        this.abortController.abort();
+      });
+    }
 
     this.setTabs(this.getTabs());
 
@@ -23,10 +32,13 @@ export class TabManager<T extends TabManagerItem> implements Disposable {
     });
 
     if (typeof this.config.tabs === 'function') {
-      this.disposer.add(
-        autorun(() => {
+      autorun(
+        () => {
           this.setTabs(this.getTabs());
-        }),
+        },
+        {
+          signal: this.abortController.signal,
+        },
       );
     }
   }
@@ -81,6 +93,6 @@ export class TabManager<T extends TabManagerItem> implements Disposable {
   };
 
   dispose() {
-    this.disposer.dispose();
+    this.abortController.abort();
   }
 }

@@ -1,4 +1,5 @@
-import { Disposer, Disposable, IDisposer } from 'disposer-util';
+import { Disposable } from 'disposer-util';
+import { LinkedAbortController } from 'linked-abort-controller';
 import { action, makeObservable, observable } from 'mobx';
 
 import { SocketConfig } from './model.types';
@@ -9,7 +10,7 @@ export class Socket<
   OutputMessageType = any,
 > implements Disposable
 {
-  private disposer: IDisposer;
+  private abortController: AbortController;
   private instance: WebSocket | null = null;
 
   isOpen = false;
@@ -33,7 +34,16 @@ export class Socket<
   constructor(
     private config: SocketConfig<Payload, InputMessageType, OutputMessageType>,
   ) {
-    this.disposer = config.disposer || new Disposer();
+    this.abortController = new LinkedAbortController(config.abortSignal);
+
+    // eslint-disable-next-line sonarjs/deprecation
+    if (config.disposer) {
+      // eslint-disable-next-line sonarjs/deprecation
+      config.disposer.add(() => {
+        this.abortController.abort();
+      });
+    }
+
     this.serializeOutputMessage =
       this.config.serializeOutputMessage ||
       ((message) => JSON.stringify(message));
@@ -176,6 +186,6 @@ export class Socket<
   };
 
   dispose() {
-    this.disposer.dispose();
+    this.abortController.abort();
   }
 }

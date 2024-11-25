@@ -14,7 +14,11 @@ export interface SocketConfig<
   url: string | ((payload: Payload | undefined) => string);
   defaultCloseCode?: number;
   protocols?: string[];
+  /**
+   * @deprecated please use {abortSignal} instead
+   */
   disposer?: IDisposer;
+  abortSignal?: AbortSignal;
   parseMessage?: (message: any) => Payload;
   serializeOutputMessage?: (
     message: OutputMessageType,
