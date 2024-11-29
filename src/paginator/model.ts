@@ -44,7 +44,7 @@ export class Paginator implements Disposable {
     }
 
     this.page = page ?? 1;
-    this.pageSize = pageSize ?? 10;
+    this.pageSize = pageSize ?? pageSizes[0] ?? 10;
     this.pagesCount = pagesCount ?? 1;
     this.pageSizes = pageSizes;
 
