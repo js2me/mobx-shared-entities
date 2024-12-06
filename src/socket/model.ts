@@ -55,13 +55,13 @@ export class Socket<
     this.skipReconnectCodes = this.config.reconnect?.skipCodes ?? [1001, 1005];
     this.reconnectTimeout = this.config.reconnect?.timeout ?? 1000;
 
-    makeObservable<this, 'refreshSocketState'>(this, {
-      isOpen: observable.ref,
-      message: observable.ref,
-      isReconnectEnabled: observable.ref,
-      onSocketMessage: action,
-      refreshSocketState: action,
-    });
+    observable.ref(this, 'isOpen');
+    observable.ref(this, 'message');
+    observable.ref(this, 'isReconnectEnabled');
+    action(this, 'onSocketMessage');
+    action(this, 'refreshSocketState');
+
+    makeObservable(this);
   }
 
   resendNotSentMessages = () => {

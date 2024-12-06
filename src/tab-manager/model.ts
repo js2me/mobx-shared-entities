@@ -25,11 +25,11 @@ export class TabManager<T extends TabManagerItem> implements Disposable {
 
     this.setTabs(this.getTabs());
 
-    makeObservable<this, 'syncedActiveTab'>(this, {
-      syncedActiveTab: observable.ref,
-      setTabs: action,
-      tabs: observable.ref,
-    });
+    observable.ref(this, 'syncedActiveTab');
+    action(this, 'setTabs');
+    observable.ref(this, 'tabs');
+
+    makeObservable(this);
 
     if (typeof this.config.tabs === 'function') {
       autorun(

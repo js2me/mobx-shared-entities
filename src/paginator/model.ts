@@ -48,21 +48,21 @@ export class Paginator implements Disposable {
     this.pagesCount = pagesCount ?? 1;
     this.pageSizes = pageSizes;
 
-    makeObservable<this, 'page' | 'pageSize' | 'pagesCount'>(this, {
-      page: observable.ref,
-      pageSize: observable.ref,
-      pageSizes: observable.ref,
-      pagesCount: observable.ref,
-      inputData: computed,
-      data: computed,
-      toPreviousPage: action.bound,
-      toNextPage: action.bound,
-      toPage: action.bound,
-      setPageSize: action.bound,
-      setPagesCount: action.bound,
-      setPageSizes: action.bound,
-      reset: action.bound,
-    });
+    observable.ref(this, 'page');
+    observable.ref(this, 'pageSize');
+    observable.ref(this, 'pageSizes');
+    observable.ref(this, 'pagesCount');
+    computed(this, 'inputData');
+    computed(this, 'data');
+    action.bound(this, 'toPreviousPage');
+    action.bound(this, 'toNextPage');
+    action.bound(this, 'toPage');
+    action.bound(this, 'setPageSize');
+    action.bound(this, 'setPagesCount');
+    action.bound(this, 'setPageSizes');
+    action.bound(this, 'reset');
+
+    makeObservable(this);
   }
 
   get inputData(): InputPaginationData {

@@ -26,14 +26,14 @@ export class Ticker implements Disposable {
     this.ticksPer = config.ticksPer;
     this.intervalId = null;
 
-    makeObservable<this, 'tick'>(this, {
-      ticks: observable,
-      ticksPer: observable,
-      tick: action.bound,
-      start: action.bound,
-      stop: action.bound,
-      reset: action.bound,
-    });
+    observable(this, 'ticks');
+    observable(this, 'ticksPer');
+    action.bound(this, 'tick');
+    action.bound(this, 'start');
+    action.bound(this, 'stop');
+    action.bound(this, 'reset');
+
+    makeObservable(this);
 
     reaction(() => this.ticksPer, this.start, {
       signal: this.abortController.signal,

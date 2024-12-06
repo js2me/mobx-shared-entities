@@ -14,14 +14,14 @@ export class Stepper<StepData> {
   constructor({ steps = [] }: StepperConfig<StepData>) {
     this.steps = steps;
 
-    makeObservable(this, {
-      activeStepIndex: observable,
-      steps: observable,
-      setSteps: action.bound,
-      goToStep: action.bound,
-      nextStep: action.bound,
-      prevStep: action.bound,
-    });
+    observable(this, 'activeStepIndex');
+    observable(this, 'steps');
+    action.bound(this, 'setSteps');
+    action.bound(this, 'goToStep');
+    action.bound(this, 'nextStep');
+    action.bound(this, 'prevStep');
+
+    makeObservable(this);
   }
 
   setSteps(steps: StepData[]) {
