@@ -12,6 +12,8 @@ export class Ticker implements Disposable {
 
   ticksPer: number;
 
+  isTicking = false;
+
   constructor(config: TickerConfig) {
     this.abortController = new LinkedAbortController(config.abortSignal);
 
@@ -28,6 +30,7 @@ export class Ticker implements Disposable {
 
     observable(this, 'ticks');
     observable(this, 'ticksPer');
+    observable(this, 'isTicking');
     action.bound(this, 'tick');
     action.bound(this, 'start');
     action.bound(this, 'stop');
@@ -46,10 +49,12 @@ export class Ticker implements Disposable {
 
   start() {
     this.reset();
+    this.isTicking = true;
     this.intervalId = setInterval(this.tick, this.ticksPer);
   }
 
   stop() {
+    this.isTicking = false;
     if (this.intervalId !== null) {
       clearInterval(this.intervalId);
     }
