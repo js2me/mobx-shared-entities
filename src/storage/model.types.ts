@@ -21,6 +21,7 @@ export interface GetFromStorageParams<TValue = any> {
 export interface SetToStorageParams<TValue = any>
   extends Omit<GetFromStorageParams<TValue>, 'fallback'> {
   value: TValue;
+  format?: (value: TValue) => string;
 }
 
 export interface SyncWithStorageParams<TValue = any>

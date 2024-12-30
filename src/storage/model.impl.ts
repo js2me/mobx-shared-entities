@@ -68,11 +68,19 @@ export class StorageModelImpl implements StorageModel {
     return value ?? config.fallback ?? null;
   }
 
+  protected formatValue(value: any): string {
+    return JSON.stringify(value);
+  }
+
   set<TValue>(config: SetToStorageParams<TValue>): void {
     const key = this.createKey(config);
     const storage = this.getStorage(config);
-
-    storage.setItem(key, JSON.stringify(config.value));
+    storage.setItem(
+      key,
+      config.format
+        ? config.format(config.value)
+        : this.formatValue(config.value),
+    );
   }
 
   syncProperty<
@@ -83,19 +91,22 @@ export class StorageModelImpl implements StorageModel {
     property: TProperty,
     params?: SyncWithStorageParams<TContext[TProperty]>,
   ): void {
+    const storageKey = params?.key ?? (property as string);
+
     context[property] =
       this.get<TContext[TProperty]>({
         ...params,
-        key: params?.key ?? (property as string),
+        key: storageKey,
       }) ?? context[property];
 
     reaction(
-      () => context[property],
+      () => JSON.stringify(context[property]),
       (value) => {
         this.set({
           ...params,
-          key: params?.key ?? (property as string),
+          key: storageKey,
           value,
+          format: (value) => value,
         });
       },
       {
