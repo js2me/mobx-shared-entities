@@ -55,20 +55,20 @@ export class TwoColorThemeStoreImpl implements TwoColorThemeStore {
     return this.config?.fallbackTheme ?? 'auto';
   }
 
-  protected getCachedTheme(): Theme {
-    let localStorageKey: string;
-
+  protected getCacheKey() {
     if (
       this.config?.localStorageKey == null ||
       this.config?.localStorageKey === false
     ) {
-      localStorageKey = 'theme';
+      return 'theme';
     } else {
-      localStorageKey = this.config.localStorageKey;
+      return this.config.localStorageKey;
     }
+  }
 
+  protected getCachedTheme(): Theme {
     return (
-      (globalThis.localStorage.getItem(localStorageKey) as Theme | null) ??
+      (globalThis.localStorage.getItem(this.getCacheKey()) as Theme | null) ??
       this.getFallbackTheme()
     );
   }
@@ -78,16 +78,23 @@ export class TwoColorThemeStoreImpl implements TwoColorThemeStore {
   }
 
   setTheme(theme: Theme) {
+    if (this.theme === theme) {
+      return;
+    }
+
     this.theme = theme;
+    if (this.config?.localStorageKey !== false) {
+      localStorage.setItem(this.getCacheKey(), theme);
+    }
   }
 
   switchTheme() {
     if (this.theme === 'dark') {
-      this.theme = 'auto';
+      this.setTheme('auto');
     } else if (this.theme === 'auto') {
-      this.theme = 'light';
+      this.setTheme('light');
     } else {
-      this.theme = 'dark';
+      this.setTheme('dark');
     }
   }
 
