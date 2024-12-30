@@ -25,7 +25,6 @@ export class TwoColorThemeStoreImpl implements TwoColorThemeStore {
 
     observable.ref(this, 'theme');
     observable.ref(this, 'mediaColorScheme');
-    observable.ref(this, 'mediaColorScheme');
     computed(this, 'colorScheme');
     action.bound(this, 'updateMediaColorSchema');
     action.bound(this, 'setTheme');
@@ -40,7 +39,6 @@ export class TwoColorThemeStoreImpl implements TwoColorThemeStore {
       });
   }
 
-  @computed
   get colorScheme() {
     return this.theme === 'auto' ? this.mediaColorScheme : this.theme;
   }
