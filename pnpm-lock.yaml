@@ -15,26 +15,26 @@ importers:
         specifier: ^1.0.2
         version: 1.0.2
       mobx:
-        specifier: '>=6.12.4'
+        specifier: ^6.12.4
         version: 6.13.0
     devDependencies:
       '@types/node':
-        specifier: 20.14.5
+        specifier: ^20.14.5
         version: 20.14.5
       eslint:
-        specifier: 8.57.0
+        specifier: ^8.57.0
         version: 8.57.0
       js2me-eslint-config:
-        specifier: 1.0.3
+        specifier: ^1.0.3
         version: 1.0.3(eslint@8.57.0)(prettier@3.3.2)(typescript@5.4.5)
       js2me-exports-post-build-script:
-        specifier: 2.0.10
+        specifier: ^2.0.10
         version: 2.0.10
       rimraf:
-        specifier: 6.0.1
+        specifier: ^6.0.1
         version: 6.0.1
       typescript:
-        specifier: 5.4.5
+        specifier: ^5.4.5
         version: 5.4.5
 
 packages:
@@ -691,10 +691,6 @@ packages:
     peerDependencies:
       eslint: ^6.0.0 || ^7.0.0 || >=8.0.0
 
-  '@eslint-community/regexpp@4.11.0':
-    resolution: {integrity: sha512-G/M/tIiMrTAxEWRfLfQJMmGNX28IxBg4PBz8XqQhqUHLFI6TL2htpIB1iQCj144V5ee/JaKyT9/WZ0MGZWfA7A==}
-    engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
-
   '@eslint-community/regexpp@4.11.1':
     resolution: {integrity: sha512-m4DVN9ZqskZoLU5GlWZadwDnYo3vAEydiUayB9widCl9ffWx2IvPnp6n3on5rJmziJSw9Bv+Z3ChDVdMwXCY8Q==}
     engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
@@ -1322,6 +1318,7 @@ packages:
   eslint@8.57.0:
     resolution: {integrity: sha512-dZ6+mexnaTIbSBZWgou51U6OmzIhYM2VcNdtiTtI7qPNZm35Akpr0f6vtw3w1Kmn5PYo+tZVfh13WrhpS6oLqQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
 
   espree@9.6.1:
@@ -3175,8 +3172,6 @@ snapshots:
       eslint: 8.57.0
       eslint-visitor-keys: 3.4.3
 
-  '@eslint-community/regexpp@4.11.0': {}
-
   '@eslint-community/regexpp@4.11.1': {}
 
   '@eslint/eslintrc@2.1.4':
@@ -4041,7 +4036,7 @@ snapshots:
   eslint@8.57.0:
     dependencies:
       '@eslint-community/eslint-utils': 4.4.0(eslint@8.57.0)
-      '@eslint-community/regexpp': 4.11.0
+      '@eslint-community/regexpp': 4.11.1
       '@eslint/eslintrc': 2.1.4
       '@eslint/js': 8.57.0
       '@humanwhocodes/config-array': 0.11.14
