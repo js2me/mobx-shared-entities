@@ -38,7 +38,7 @@ export class StorageModel {
       return this.config.createKey(params);
     }
 
-    const prefix = params.prefix ?? this.config?.prefix;
+    const prefix = params.prefix ?? this.config?.prefix ?? '';
     const namespace = params.namespace ?? this.config?.namespace;
     const key = params.key;
 
@@ -98,18 +98,14 @@ export class StorageModel {
         key: storageKey,
       }) ?? context[property];
 
-    let firstRun = true;
     const disposer = autorun(
       () => {
         const newValue = context[property];
-        if (firstRun) {
-          firstRun = false;
-          this.set({
-            ...params,
-            key: storageKey,
-            value: newValue,
-          });
-        }
+        this.set({
+          ...params,
+          key: storageKey,
+          value: newValue,
+        });
       },
       {
         signal: this.abortSignal,
