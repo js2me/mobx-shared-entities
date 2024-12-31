@@ -42,7 +42,7 @@ export class StorageModel {
     const namespace = params.namespace ?? this.config?.namespace;
     const key = params.key;
 
-    return `${prefix ? `/${prefix}` : ''}${namespace ? `/${namespace}` : ''}${key}`;
+    return `${prefix ? `${prefix}/` : ''}${namespace ? `${namespace}/` : ''}${key}`;
   }
 
   get<TValue>(config: GetFromStorageParams<TValue>): TValue | null {
