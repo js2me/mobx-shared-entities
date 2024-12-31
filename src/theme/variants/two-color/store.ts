@@ -6,5 +6,5 @@ export interface TwoColorThemeStore {
   colorScheme: ColorScheme;
   setTheme(theme: Theme): void;
   switchTheme(): void;
-  clean(): void;
+  destroy(): void;
 }

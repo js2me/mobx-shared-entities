@@ -16,11 +16,11 @@ export interface StorageModel {
     context: TContext,
     property: TProperty,
     params?: SyncWithStorageParams<TContext[TProperty]>,
-  ): void;
+  ): VoidFunction;
 
   /**
    * Reset model
    * Do not clean storages
    */
-  clean(): void;
+  destroy(): void;
 }

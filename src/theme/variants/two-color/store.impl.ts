@@ -1,14 +1,17 @@
 import { LinkedAbortController } from 'linked-abort-controller';
 import { action, computed, makeObservable, observable } from 'mobx';
 
+import { StorageModel, StorageModelImpl } from '../../../storage';
+
 import { TwoColorThemeStore } from './store';
 import { ColorScheme, Theme, TwoColorThemeStoreConfig } from './store.types';
 
 export class TwoColorThemeStoreImpl implements TwoColorThemeStore {
   protected abortController: AbortController;
   protected abortSignal: AbortSignal;
+  protected storageModel?: StorageModel;
 
-  theme: Theme;
+  theme!: Theme;
   mediaColorScheme: ColorScheme;
 
   constructor(protected config?: TwoColorThemeStoreConfig) {
@@ -18,7 +21,14 @@ export class TwoColorThemeStoreImpl implements TwoColorThemeStore {
     if (config?.localStorageKey === false) {
       this.theme = this.getFallbackTheme();
     } else {
-      this.theme = this.getCachedTheme();
+      this.storageModel = new StorageModelImpl({
+        abortSignal: this.abortSignal,
+      });
+
+      this.storageModel.syncProperty(this, 'theme', {
+        key: this.getCacheKey(),
+        fallback: this.getFallbackTheme(),
+      });
     }
 
     this.mediaColorScheme = this.getMediaColorScheme();
@@ -66,26 +76,12 @@ export class TwoColorThemeStoreImpl implements TwoColorThemeStore {
     }
   }
 
-  protected getCachedTheme(): Theme {
-    return (
-      (globalThis.localStorage.getItem(this.getCacheKey()) as Theme | null) ??
-      this.getFallbackTheme()
-    );
-  }
-
   protected updateMediaColorSchema() {
     this.mediaColorScheme = this.getMediaColorScheme();
   }
 
   setTheme(theme: Theme) {
-    if (this.theme === theme) {
-      return;
-    }
-
     this.theme = theme;
-    if (this.config?.localStorageKey !== false) {
-      localStorage.setItem(this.getCacheKey(), theme);
-    }
   }
 
   switchTheme() {
@@ -98,7 +94,8 @@ export class TwoColorThemeStoreImpl implements TwoColorThemeStore {
     }
   }
 
-  clean() {
+  destroy() {
     this.abortController.abort();
+    this.storageModel?.destroy();
   }
 }

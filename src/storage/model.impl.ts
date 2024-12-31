@@ -1,5 +1,5 @@
 import { LinkedAbortController } from 'linked-abort-controller';
-import { makeObservable, reaction } from 'mobx';
+import { makeObservable, observe } from 'mobx';
 
 import { StorageModel } from './model';
 import {
@@ -90,7 +90,7 @@ export class StorageModelImpl implements StorageModel {
     context: TContext,
     property: TProperty,
     params?: SyncWithStorageParams<TContext[TProperty]>,
-  ): void {
+  ): VoidFunction {
     const storageKey = params?.key ?? (property as string);
 
     context[property] =
@@ -99,23 +99,23 @@ export class StorageModelImpl implements StorageModel {
         key: storageKey,
       }) ?? context[property];
 
-    reaction(
-      () => JSON.stringify(context[property]),
-      (value) => {
-        this.set({
-          ...params,
-          key: storageKey,
-          value,
-          format: (value) => value,
-        });
-      },
-      {
-        signal: this.abortSignal,
-      },
-    );
+    const disposer = observe(context[property], () => {
+      this.set({
+        ...params,
+        key: storageKey,
+        value: context[property],
+      });
+    });
+
+    this.abortSignal.addEventListener('abort', disposer);
+
+    return () => {
+      this.abortSignal.removeEventListener('abort', disposer);
+      disposer();
+    };
   }
 
-  clean() {
+  destroy() {
     this.abortController.abort();
   }
 }
