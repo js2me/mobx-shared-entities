@@ -18,6 +18,17 @@ export class TwoColorThemeStoreImpl implements TwoColorThemeStore {
     this.abortController = new LinkedAbortController(config?.abortSignal);
     this.abortSignal = this.abortController.signal;
 
+    this.mediaColorScheme = this.getMediaColorScheme();
+
+    observable.ref(this, 'theme');
+    observable.ref(this, 'mediaColorScheme');
+    computed(this, 'colorScheme');
+    action.bound(this, 'updateMediaColorSchema');
+    action.bound(this, 'setTheme');
+    action.bound(this, 'switchTheme');
+
+    makeObservable(this);
+
     if (config?.localStorageKey === false) {
       this.theme = this.getFallbackTheme();
     } else {
@@ -30,17 +41,6 @@ export class TwoColorThemeStoreImpl implements TwoColorThemeStore {
         fallback: this.getFallbackTheme(),
       });
     }
-
-    this.mediaColorScheme = this.getMediaColorScheme();
-
-    observable.ref(this, 'theme');
-    observable.ref(this, 'mediaColorScheme');
-    computed(this, 'colorScheme');
-    action.bound(this, 'updateMediaColorSchema');
-    action.bound(this, 'setTheme');
-    action.bound(this, 'switchTheme');
-
-    makeObservable(this);
 
     globalThis
       .matchMedia?.('(prefers-color-scheme: dark)')
