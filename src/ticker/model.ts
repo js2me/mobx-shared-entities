@@ -12,7 +12,7 @@ export class Ticker implements Disposable {
 
   ticksPer: number;
 
-  isTicking = false;
+  isRunning = false;
 
   constructor(config: TickerConfig) {
     this.abortController = new LinkedAbortController(config.abortSignal);
@@ -49,12 +49,12 @@ export class Ticker implements Disposable {
 
   start() {
     this.reset();
-    this.isTicking = true;
+    this.isRunning = true;
     this.intervalId = setInterval(this.tick, this.ticksPer);
   }
 
   stop() {
-    this.isTicking = false;
+    this.isRunning = false;
     if (this.intervalId !== null) {
       clearInterval(this.intervalId);
     }
