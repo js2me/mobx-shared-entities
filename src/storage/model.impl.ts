@@ -1,5 +1,5 @@
 import { LinkedAbortController } from 'linked-abort-controller';
-import { makeObservable, observe } from 'mobx';
+import { autorun, makeObservable } from 'mobx';
 
 import { StorageModel } from './model';
 import {
@@ -99,17 +99,19 @@ export class StorageModelImpl implements StorageModel {
         key: storageKey,
       }) ?? context[property];
 
-    const disposer = observe(
-      context[property],
-      (upd) => {
-        console.info('sync property', upd);
+    const disposer = autorun(
+      () => {
+        const newValue = context[property];
+        console.info('sync property', newValue);
         this.set({
           ...params,
           key: storageKey,
-          value: context[property],
+          value: newValue,
         });
       },
-      true,
+      {
+        signal: this.abortSignal,
+      },
     );
 
     this.abortSignal.addEventListener('abort', disposer);
