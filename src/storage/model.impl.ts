@@ -99,15 +99,18 @@ export class StorageModelImpl implements StorageModel {
         key: storageKey,
       }) ?? context[property];
 
+    let firstRun = true;
     const disposer = autorun(
       () => {
         const newValue = context[property];
-        console.info('sync property', newValue);
-        this.set({
-          ...params,
-          key: storageKey,
-          value: newValue,
-        });
+        if (firstRun) {
+          firstRun = false;
+          this.set({
+            ...params,
+            key: storageKey,
+            value: newValue,
+          });
+        }
       },
       {
         signal: this.abortSignal,
