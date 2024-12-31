@@ -99,7 +99,8 @@ export class StorageModelImpl implements StorageModel {
         key: storageKey,
       }) ?? context[property];
 
-    const disposer = observe(context, property, () => {
+    const disposer = observe(context[property], (upd) => {
+      console.info('sync property', upd);
       this.set({
         ...params,
         key: storageKey,
