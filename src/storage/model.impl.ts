@@ -99,11 +99,11 @@ export class StorageModelImpl implements StorageModel {
         key: storageKey,
       }) ?? context[property];
 
-    const disposer = observe(context[property], () => {
+    const disposer = observe(context, property, (data) => {
       this.set({
         ...params,
         key: storageKey,
-        value: context[property],
+        value: data.newValue,
       });
     });
 
