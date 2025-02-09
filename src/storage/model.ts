@@ -2,10 +2,10 @@ import { LinkedAbortController } from 'linked-abort-controller';
 import { autorun, makeObservable } from 'mobx';
 
 import {
-  StorageModelConfig,
-  GetFromStorageParams,
-  SetToStorageParams,
-  SyncWithStorageParams,
+  type StorageModelConfig,
+  type GetFromStorageParams,
+  type SetToStorageParams,
+  type SyncWithStorageParams,
 } from './model.types';
 
 export class StorageModel {
@@ -92,10 +92,14 @@ export class StorageModel {
   ): VoidFunction {
     const storageKey = params?.key ?? (property as string);
 
+    const fallback =
+      params && 'fallback' in params ? params.fallback : context[property];
+
     context[property] =
       this.get<TContext[TProperty]>({
         ...params,
         key: storageKey,
+        fallback,
       }) ?? context[property];
 
     const disposer = autorun(
