@@ -1,5 +1,5 @@
 import { LinkedAbortController } from 'linked-abort-controller';
-import { autorun, makeObservable } from 'mobx';
+import { autorun, makeObservable, runInAction } from 'mobx';
 
 import {
   type StorageModelConfig,
@@ -95,12 +95,14 @@ export class StorageModel {
     const fallback =
       params && 'fallback' in params ? params.fallback : context[property];
 
-    context[property] =
-      this.get<TContext[TProperty]>({
-        ...params,
-        key: storageKey,
-        fallback,
-      }) ?? context[property];
+    runInAction(() => {
+      context[property] =
+        this.get<TContext[TProperty]>({
+          ...params,
+          key: storageKey,
+          fallback,
+        }) ?? context[property];
+    });
 
     const disposer = autorun(
       () => {
