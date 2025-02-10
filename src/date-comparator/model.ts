@@ -25,7 +25,6 @@ export class DatesComparator implements DatesComparison {
     if (this.config?.dates != null) {
       this.setDates(this.config.dates);
     }
-
     observable.ref(this, 'dates');
     observable.ref(this, 'hours');
     observable.ref(this, 'minutes');
@@ -38,13 +37,7 @@ export class DatesComparator implements DatesComparison {
   setDates(dates: DatesToCompare) {
     clearTimeout(this.timeoutId!);
     this.dates = dates;
-
-    if (
-      typeof this.dates[0] === 'string' ||
-      typeof this.dates[1] === 'string'
-    ) {
-      this.timeoutId = setTimeout(this.compareDates, 100);
-    }
+    this.compareDates();
   }
 
   private getDatesComparison(): DatesComparison {
@@ -80,7 +73,10 @@ export class DatesComparator implements DatesComparison {
     if (diff.hours <= 0 && diff.minutes <= 0 && diff.seconds <= 0) {
       clearTimeout(this.timeoutId!);
       this.timeoutId = undefined;
-    } else {
+    } else if (
+      this.isDateDynamic(this.dates?.[0]) ||
+      this.isDateDynamic(this.dates?.[1])
+    ) {
       this.timeoutId = setTimeout(this.compareDates, 100);
     }
   }
@@ -99,6 +95,10 @@ export class DatesComparator implements DatesComparison {
 
   get totalSeconds() {
     return this.hours * 3600 + this.minutes * 60 + this.seconds;
+  }
+
+  private isDateDynamic(date: Maybe<CompareDateType>) {
+    return typeof date === 'string';
   }
 
   private resolveDate(date: CompareDateType): ResolvedCompareDateType {
