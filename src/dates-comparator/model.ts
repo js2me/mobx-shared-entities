@@ -77,7 +77,10 @@ export class DatesComparator implements DatesComparison {
       this.isDateDynamic(this.dates?.[0]) ||
       this.isDateDynamic(this.dates?.[1])
     ) {
-      this.timeoutId = setTimeout(this.compareDates, 100);
+      this.timeoutId = setTimeout(
+        this.compareDates,
+        this.config?.checkTime ?? 100,
+      );
     }
   }
 

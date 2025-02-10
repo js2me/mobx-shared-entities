@@ -4,6 +4,11 @@ export interface DatesComparatorConfig {
     endDate: ResolvedCompareDateType,
   ) => DatesComparison;
   dates?: DatesToCompare;
+  /**
+   * The amount of time in milliseconds to check the difference between the two dates
+   * @default 100
+   */
+  checkTime?: number;
 }
 
 export type CompareDateType = Date | 'now' | number;
