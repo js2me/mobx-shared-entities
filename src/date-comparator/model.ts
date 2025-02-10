@@ -22,6 +22,10 @@ export class DatesComparator implements DatesComparison {
   private timeoutId: Maybe<number>;
 
   constructor(private config?: DatesComparatorConfig) {
+    if (this.config?.dates != null) {
+      this.setDates(this.config.dates);
+    }
+
     observable.ref(this, 'dates');
     observable.ref(this, 'hours');
     observable.ref(this, 'minutes');
