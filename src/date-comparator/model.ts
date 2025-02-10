@@ -57,7 +57,7 @@ export class DatesComparator implements DatesComparison {
     }
 
     const timeDiff = timeDuration(
-      resolvedStartDate.getTime() - resolvedEndDate.getTime(),
+      resolvedEndDate.getTime() - resolvedStartDate.getTime(),
     );
 
     return timeDiff;
