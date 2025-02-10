@@ -32,6 +32,12 @@ export class DatesComparator implements DatesComparison {
     action.bound(this, 'compareDates');
     action.bound(this, 'setDates');
     makeObservable(this);
+
+    if (this.config?.abortSignal) {
+      this.config.abortSignal.addEventListener('abort', () => {
+        this.reset();
+      });
+    }
   }
 
   setDates(dates: DatesToCompare) {

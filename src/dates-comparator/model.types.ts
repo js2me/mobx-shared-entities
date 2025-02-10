@@ -1,4 +1,5 @@
 export interface DatesComparatorConfig {
+  abortSignal?: AbortSignal;
   getComparison?: (
     startDate: ResolvedCompareDateType,
     endDate: ResolvedCompareDateType,
