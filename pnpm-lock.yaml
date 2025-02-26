@@ -8,12 +8,18 @@ importers:
 
   .:
     dependencies:
+      '@types/lodash-es':
+        specifier: ^4.17.12
+        version: 4.17.12
       disposer-util:
         specifier: ^1.0.2
         version: 1.0.12
       linked-abort-controller:
         specifier: ^1.0.2
         version: 1.0.4
+      lodash-es:
+        specifier: ^4.17.21
+        version: 4.17.21
       mobx:
         specifier: ^6.12.4
         version: 6.13.6

@@ -66,7 +66,11 @@ export class DatesComparator implements DatesComparison {
       resolvedEndDate.getTime() - resolvedStartDate.getTime(),
     );
 
-    return timeDiff;
+    return {
+      hours: Math.max(timeDiff.hours, 0),
+      minutes: Math.max(timeDiff.minutes, 0),
+      seconds: Math.max(timeDiff.seconds, 0),
+    };
   }
 
   private compareDates() {
@@ -76,7 +80,7 @@ export class DatesComparator implements DatesComparison {
     this.minutes = diff.minutes;
     this.seconds = diff.seconds;
 
-    if (diff.hours <= 0 && diff.minutes <= 0 && diff.seconds <= 0) {
+    if (this.hours <= 0 && this.minutes <= 0 && this.seconds <= 0) {
       clearTimeout(this.timeoutId!);
       this.timeoutId = undefined;
     } else if (

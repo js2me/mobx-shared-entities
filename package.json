@@ -26,7 +26,9 @@
     "url": "git://github.com/js2me/mobx-shared-entities"
   },
   "dependencies": {
+    "@types/lodash-es": "^4.17.12",
     "linked-abort-controller": "^1.0.2",
+    "lodash-es": "^4.17.21",
     "yummies": "^3.0.17"
   },
   "peerDependencies": {
