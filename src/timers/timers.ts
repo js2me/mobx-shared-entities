@@ -97,4 +97,16 @@ export class Timers {
       type: rawCfg?.type ?? 'debounce',
     };
   }
+
+  destroyTimer(id: string) {
+    this.timedFnsMap.get(id)?.cancel();
+    this.timedFnsMap.delete(id);
+  }
+
+  clean() {
+    this.abortController.abort();
+    this.timedFnsMap.forEach((timedFn) => {
+      timedFn.cancel();
+    });
+  }
 }
