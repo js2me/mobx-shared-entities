@@ -7,3 +7,5 @@ export interface TimerConfig {
 }
 
 export type TimerConfigRaw = TimerConfig['timeout'] | Partial<TimerConfig>;
+
+export type TimedFn = (params: { runAgain: VoidFunction }) => void;

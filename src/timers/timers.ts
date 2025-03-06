@@ -3,7 +3,7 @@ import { debounce, throttle } from 'lodash-es';
 import { makeObservable, observable } from 'mobx';
 import { generateStackBasedId } from 'yummies/id';
 
-import { TimerConfig, TimerConfigRaw } from './timers.types';
+import { TimedFn, TimerConfig, TimerConfigRaw } from './timers.types';
 
 export class Timers {
   private timedFnsMap: Map<
@@ -41,10 +41,10 @@ export class Timers {
    * с новой fn функцией
    */
   throttled = (
-    fn: VoidFunction,
+    fn: TimedFn,
     scheduleConfigRaw?: Omit<TimerConfigRaw, 'type'>,
   ) => {
-    const cfg = this.createTimerConfig({
+    const cfg = this.createTimerConfig(fn, {
       ...scheduleConfigRaw,
       type: 'throttle',
     });
@@ -52,7 +52,11 @@ export class Timers {
     let timedFn = this.timedFnsMap.get(cfg.id);
 
     if (!timedFn) {
-      timedFn = throttle(fn, cfg.timeout, cfg);
+      timedFn = throttle(
+        () => fn({ runAgain: () => this.throttled(fn, cfg) }),
+        cfg.timeout,
+        cfg,
+      );
       this.timedFnsMap.set(cfg.id, timedFn);
     }
 
@@ -65,10 +69,10 @@ export class Timers {
    * с новой fn функцией
    */
   debounced = (
-    fn: VoidFunction,
+    fn: TimedFn,
     scheduleConfigRaw?: Omit<TimerConfigRaw, 'type'>,
   ) => {
-    const cfg = this.createTimerConfig({
+    const cfg = this.createTimerConfig(fn, {
       ...scheduleConfigRaw,
       type: 'debounce',
     });
@@ -80,14 +84,21 @@ export class Timers {
       this.timedFnsMap.delete(cfg.id);
     }
 
-    timedFn = debounce(fn, cfg.timeout, cfg);
+    timedFn = debounce(
+      () => fn({ runAgain: () => this.debounced(fn, cfg) }),
+      cfg.timeout,
+      cfg,
+    );
 
     this.timedFnsMap.set(cfg.id, timedFn);
 
     timedFn();
   };
 
-  private createTimerConfig(configRaw?: TimerConfigRaw): TimerConfig {
+  private createTimerConfig(
+    fn: TimedFn,
+    configRaw?: TimerConfigRaw,
+  ): TimerConfig {
     const rawCfg =
       typeof configRaw === 'number' ? { timeout: configRaw } : configRaw;
 
