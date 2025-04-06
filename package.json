@@ -27,6 +27,7 @@
     "url": "git://github.com/js2me/mobx-shared-entities"
   },
   "dependencies": {
+    "@faker-js/faker": "^9.6.0",
     "@types/lodash-es": "^4.17.12",
     "linked-abort-controller": "^1.1.0",
     "lodash-es": "^4.17.21",
