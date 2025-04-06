@@ -17,6 +17,7 @@
   "author": "js2me",
   "license": "MIT",
   "description": "",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/js2me/mobx-shared-entities/issues"
   },
@@ -27,21 +28,21 @@
   },
   "dependencies": {
     "@types/lodash-es": "^4.17.12",
-    "linked-abort-controller": "^1.0.2",
+    "linked-abort-controller": "^1.1.0",
     "lodash-es": "^4.17.21",
-    "yummies": "^3.0.17"
+    "yummies": "^3.0.39"
   },
   "peerDependencies": {
     "disposer-util": "^1.0.2",
     "mobx": "^6.12.4"
   },
   "devDependencies": {
-    "@types/node": "^20.14.5",
-    "eslint": "^8.57.0",
-    "js2me-eslint-config": "^1.0.3",
+    "@types/node": "^20.17.30",
+    "eslint": "^8.57.1",
+    "js2me-eslint-config": "^1.0.7",
     "js2me-exports-post-build-script": "^2.0.18",
     "rimraf": "^6.0.1",
-    "typescript": "^5.4.5"
+    "typescript": "^5.8.3"
   },
   "packageManager": "pnpm@9.5.0+sha512.140036830124618d624a2187b50d04289d5a087f326c9edfc0ccd733d76c4f52c3a313d4fc148794a2a9d81553016004e6742e8cf850670268a7387fc220c903"
 }

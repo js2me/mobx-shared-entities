@@ -1,1 +1,1 @@
-export * from './two-color';
+export * from './two-color/index.js';

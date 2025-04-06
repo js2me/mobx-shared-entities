@@ -14,7 +14,7 @@ import {
   PaginationData,
   PaginatorConfig,
   PaginationOffsetData,
-} from './model.types';
+} from './model.types.js';
 
 export class Paginator implements Disposable {
   private abortController: AbortController;

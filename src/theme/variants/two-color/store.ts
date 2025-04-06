@@ -1,9 +1,9 @@
 import { LinkedAbortController } from 'linked-abort-controller';
 import { action, computed, makeObservable, observable } from 'mobx';
 
-import { StorageModel } from '../../../storage';
+import { StorageModel } from '../../../storage/index.js';
 
-import { ColorScheme, Theme, TwoColorThemeStoreConfig } from './store.types';
+import { ColorScheme, Theme, TwoColorThemeStoreConfig } from './store.types.js';
 
 export class TwoColorThemeStore {
   protected abortController: AbortController;

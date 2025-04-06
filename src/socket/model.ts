@@ -2,7 +2,7 @@ import { Disposable } from 'disposer-util';
 import { LinkedAbortController } from 'linked-abort-controller';
 import { action, makeObservable, observable } from 'mobx';
 
-import { SocketConfig } from './model.types';
+import { SocketConfig } from './model.types.js';
 
 export class Socket<
   Payload = void,

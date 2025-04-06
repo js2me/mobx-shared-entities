@@ -2,7 +2,7 @@ import { Disposable } from 'disposer-util';
 import { LinkedAbortController } from 'linked-abort-controller';
 import { action, autorun, makeObservable, observable, runInAction } from 'mobx';
 
-import { TabManagerConfig, TabManagerItem } from './model.types';
+import { TabManagerConfig, TabManagerItem } from './model.types.js';
 
 export class TabManager<T extends TabManagerItem> implements Disposable {
   private abortController: AbortController;

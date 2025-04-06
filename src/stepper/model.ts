@@ -1,6 +1,6 @@
 import { action, makeObservable, observable } from 'mobx';
 
-import { StepperConfig } from './model.types';
+import { StepperConfig } from './model.types.js';
 
 export class Stepper<StepData> {
   activeStepIndex = 0;

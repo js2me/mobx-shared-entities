@@ -6,7 +6,7 @@ import {
   type GetFromStorageParams,
   type SetToStorageParams,
   type SyncWithStorageParams,
-} from './model.types';
+} from './model.types.js';
 
 export class StorageModel {
   protected abortController: AbortController;

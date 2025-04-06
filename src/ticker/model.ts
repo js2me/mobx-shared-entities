@@ -2,7 +2,7 @@ import { Disposable } from 'disposer-util';
 import { LinkedAbortController } from 'linked-abort-controller';
 import { action, makeObservable, observable, reaction } from 'mobx';
 
-import { TickerConfig } from './model.types';
+import { TickerConfig } from './model.types.js';
 
 export class Ticker implements Disposable {
   private abortController: AbortController;

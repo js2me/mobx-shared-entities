@@ -1,2 +1,2 @@
-export * from './timers';
-export * from './timers.types';
+export * from './timers.js';
+export * from './timers.types.js';

@@ -3,7 +3,7 @@ import { debounce, throttle } from 'lodash-es';
 import { makeObservable, observable } from 'mobx';
 import { generateStackBasedId } from 'yummies/id';
 
-import { TimedFn, TimerConfig, TimerConfigRaw } from './timers.types';
+import { TimedFn, TimerConfig, TimerConfigRaw } from './timers.types.js';
 
 export class Timers {
   private timedFnsMap: Map<

@@ -8,7 +8,7 @@ import {
   DatesToCompare,
   ResolvedCompareDateType,
   CompareDateType,
-} from './model.types';
+} from './model.types.js';
 
 /**
  * Entity for comparing two dates, allows you to dynamically get the difference between two dynamic dates

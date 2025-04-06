@@ -1,2 +1,2 @@
-export * from './model.types';
-export * from './model';
+export * from './model.types.js';
+export * from './model.js';
