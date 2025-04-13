@@ -79,18 +79,14 @@ export class Timers {
 
     let timedFn = this.timedFnsMap.get(cfg.id);
 
-    if (timedFn) {
-      timedFn.cancel();
-      this.timedFnsMap.delete(cfg.id);
+    if (!timedFn) {
+      timedFn = debounce(
+        () => fn({ runAgain: () => this.debounced(fn, cfg) }),
+        cfg.timeout,
+        cfg,
+      );
+      this.timedFnsMap.set(cfg.id, timedFn);
     }
-
-    timedFn = debounce(
-      () => fn({ runAgain: () => this.debounced(fn, cfg) }),
-      cfg.timeout,
-      cfg,
-    );
-
-    this.timedFnsMap.set(cfg.id, timedFn);
 
     timedFn();
   };
