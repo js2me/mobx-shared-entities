@@ -1,4 +1,4 @@
-import { PartialKeys } from "yummies/utils/types";
+import { PartialKeys } from 'yummies/utils/types';
 
 export interface TimerConfig {
   id: string;
