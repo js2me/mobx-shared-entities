@@ -1,3 +1,5 @@
+import { PartialKeys } from "yummies/utils/types";
+
 export interface TimerConfig {
   id: string;
   timeout: number;
@@ -6,6 +8,8 @@ export interface TimerConfig {
   trailing?: boolean;
 }
 
-export type TimerConfigRaw = TimerConfig['timeout'] | Partial<TimerConfig>;
+export type TimerConfigRaw =
+  | TimerConfig['timeout']
+  | Partial<PartialKeys<TimerConfig, 'type'>>;
 
 export type TimedFn = (params: { runAgain: VoidFunction }) => void;

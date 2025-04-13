@@ -40,14 +40,8 @@ export class Timers {
    * в случае если этот метод будет вызван повторно, то предыдущий таймер будет перезапущен
    * с новой fn функцией
    */
-  throttled = (
-    fn: TimedFn,
-    scheduleConfigRaw?: Omit<TimerConfigRaw, 'type'>,
-  ) => {
-    const cfg = this.createTimerConfig(fn, {
-      ...scheduleConfigRaw,
-      type: 'throttle',
-    });
+  throttled = (fn: TimedFn, scheduleConfigRaw?: TimerConfigRaw) => {
+    const cfg = this.createTimerConfig(fn, 'throttle', scheduleConfigRaw);
 
     let timedFn = this.timedFnsMap.get(cfg.id);
 
@@ -68,14 +62,8 @@ export class Timers {
    * в случае если этот метод будет вызван повторно, то предыдущий таймер будет очищен и перезапущен снова
    * с новой fn функцией
    */
-  debounced = (
-    fn: TimedFn,
-    scheduleConfigRaw?: Omit<TimerConfigRaw, 'type'>,
-  ) => {
-    const cfg = this.createTimerConfig(fn, {
-      ...scheduleConfigRaw,
-      type: 'debounce',
-    });
+  debounced = (fn: TimedFn, scheduleConfigRaw?: TimerConfigRaw) => {
+    const cfg = this.createTimerConfig(fn, 'debounce', scheduleConfigRaw);
 
     let timedFn = this.timedFnsMap.get(cfg.id);
 
@@ -93,15 +81,16 @@ export class Timers {
 
   private createTimerConfig(
     fn: TimedFn,
+    type: TimerConfig['type'],
     configRaw?: TimerConfigRaw,
   ): TimerConfig {
     const rawCfg =
       typeof configRaw === 'number' ? { timeout: configRaw } : configRaw;
 
     return {
-      id: rawCfg?.id ?? generateStackBasedId(),
+      id: rawCfg?.id ?? type + generateStackBasedId(),
       timeout: rawCfg?.timeout ?? 0,
-      type: rawCfg?.type ?? 'debounce',
+      type,
     };
   }
 
