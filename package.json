@@ -31,10 +31,10 @@
     "@types/lodash-es": "^4.17.12",
     "linked-abort-controller": "^1.1.0",
     "lodash-es": "^4.17.21",
-    "yummies": "^3.0.39"
+    "yummies": "^3.1.3"
   },
   "peerDependencies": {
-    "disposer-util": "^1.0.2",
+    "disposer-util": "^2.0.1",
     "mobx": "^6.12.4"
   },
   "devDependencies": {
