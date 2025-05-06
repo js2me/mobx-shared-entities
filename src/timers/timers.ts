@@ -3,13 +3,10 @@ import { debounce, throttle } from 'lodash-es';
 import { makeObservable, observable } from 'mobx';
 import { generateStackBasedId } from 'yummies/id';
 
-import { TimedFn, TimerConfig, TimerConfigRaw } from './timers.types.js';
+import { TimedCallback, TimerConfig, TimerConfigRaw } from './timers.types.js';
 
 export class Timers {
-  private timedFnsMap: Map<
-    string,
-    ReturnType<typeof throttle | typeof debounce>
-  >;
+  private configsMap: Map<string, TimerConfig>;
 
   private abortController: AbortController;
 
@@ -17,13 +14,13 @@ export class Timers {
     this.abortController = new LinkedAbortController(config?.abortSignal);
 
     this.abortController.signal.addEventListener('abort', () => {
-      this.timedFnsMap.forEach((schedulerFn) => {
-        schedulerFn.cancel();
+      this.configsMap.forEach((config) => {
+        config.timedFn?.cancel();
       });
-      this.timedFnsMap.clear();
+      this.configsMap.clear();
     });
 
-    this.timedFnsMap = observable.map([], { deep: false });
+    this.configsMap = observable.map([], { deep: false });
 
     makeObservable(this);
   }
@@ -32,7 +29,7 @@ export class Timers {
    * Это поле означает что все таймеры были либо завершены, либо удалены
    */
   get isEmpty() {
-    return this.timedFnsMap.size === 0;
+    return this.configsMap.size === 0;
   }
 
   /**
@@ -40,21 +37,33 @@ export class Timers {
    * в случае если этот метод будет вызван повторно, то предыдущий таймер будет перезапущен
    * с новой fn функцией
    */
-  throttled = (fn: TimedFn, scheduleConfigRaw?: TimerConfigRaw) => {
-    const cfg = this.createTimerConfig(fn, 'throttle', scheduleConfigRaw);
+  throttled = (fn: TimedCallback, scheduleConfigRaw?: TimerConfigRaw) => {
+    const cfg = this.getTimerConfig(fn, 'throttle', scheduleConfigRaw);
 
-    let timedFn = this.timedFnsMap.get(cfg.id);
+    if (!cfg.timedFn) {
+      cfg.timedFn = throttle(
+        () => {
+          let runAgainCalled = false;
 
-    if (!timedFn) {
-      timedFn = throttle(
-        () => fn({ runAgain: () => this.throttled(fn, cfg) }),
+          const result = this.configsMap.get(cfg.id)?.fn({
+            runAgain: () => {
+              runAgainCalled = true;
+              return this.throttled(fn, { ...cfg, id: cfg.id });
+            },
+          });
+
+          if (!runAgainCalled) {
+            this.configsMap.delete(cfg.id);
+          }
+
+          return result;
+        },
         cfg.timeout,
         cfg,
       );
-      this.timedFnsMap.set(cfg.id, timedFn);
     }
 
-    timedFn();
+    cfg.timedFn();
   };
 
   /**
@@ -62,47 +71,72 @@ export class Timers {
    * в случае если этот метод будет вызван повторно, то предыдущий таймер будет очищен и перезапущен снова
    * с новой fn функцией
    */
-  debounced = (fn: TimedFn, scheduleConfigRaw?: TimerConfigRaw) => {
-    const cfg = this.createTimerConfig(fn, 'debounce', scheduleConfigRaw);
+  debounced = (fn: TimedCallback, scheduleConfigRaw?: TimerConfigRaw) => {
+    const cfg = this.getTimerConfig(fn, 'debounce', scheduleConfigRaw);
 
-    let timedFn = this.timedFnsMap.get(cfg.id);
+    if (!cfg.timedFn) {
+      cfg.timedFn = debounce(
+        () => {
+          let runAgainCalled = false;
 
-    if (!timedFn) {
-      timedFn = debounce(
-        () => fn({ runAgain: () => this.debounced(fn, cfg) }),
+          const result = this.configsMap.get(cfg.id)?.fn({
+            runAgain: () => {
+              runAgainCalled = true;
+              return this.debounced(fn, { ...cfg, id: cfg.id });
+            },
+          });
+
+          if (!runAgainCalled) {
+            this.configsMap.delete(cfg.id);
+          }
+
+          return result;
+        },
         cfg.timeout,
         cfg,
       );
-      this.timedFnsMap.set(cfg.id, timedFn);
     }
 
-    timedFn();
+    cfg.timedFn();
   };
 
-  private createTimerConfig(
-    fn: TimedFn,
+  private getTimerConfig(
+    fn: TimedCallback,
     type: TimerConfig['type'],
     configRaw?: TimerConfigRaw,
   ): TimerConfig {
     const rawCfg =
       typeof configRaw === 'number' ? { timeout: configRaw } : configRaw;
 
+    const id = rawCfg?.id ?? type + generateStackBasedId();
+
+    if (this.configsMap.has(id)) {
+      const cfg = this.configsMap.get(id)!;
+      cfg.fn = fn;
+      cfg.timeout = rawCfg?.timeout ?? cfg.timeout ?? 0;
+      cfg.leading = rawCfg?.leading ?? cfg.leading;
+      cfg.trailing = rawCfg?.trailing ?? cfg.trailing;
+      return cfg;
+    }
+
     return {
-      id: rawCfg?.id ?? type + generateStackBasedId(),
+      id,
       timeout: rawCfg?.timeout ?? 0,
       type,
+      fn,
+      timedFn: null,
     };
   }
 
   destroyTimer(id: string) {
-    this.timedFnsMap.get(id)?.cancel();
-    this.timedFnsMap.delete(id);
+    this.configsMap.get(id)?.timedFn?.cancel();
+    this.configsMap.delete(id);
   }
 
   clean() {
     this.abortController.abort();
-    this.timedFnsMap.forEach((timedFn) => {
-      timedFn.cancel();
+    this.configsMap.forEach((config) => {
+      config.timedFn?.cancel();
     });
   }
 }
