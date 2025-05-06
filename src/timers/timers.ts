@@ -40,6 +40,10 @@ export class Timers {
   throttled = (fn: TimedCallback, scheduleConfigRaw?: TimerConfigRaw) => {
     const cfg = this.getTimerConfig(fn, 'throttle', scheduleConfigRaw);
 
+    if (!this.configsMap.has(cfg.id)) {
+      this.configsMap.set(cfg.id, cfg);
+    }
+
     if (!cfg.timedFn) {
       cfg.timedFn = throttle(
         () => {
@@ -73,6 +77,10 @@ export class Timers {
    */
   debounced = (fn: TimedCallback, scheduleConfigRaw?: TimerConfigRaw) => {
     const cfg = this.getTimerConfig(fn, 'debounce', scheduleConfigRaw);
+
+    if (!this.configsMap.has(cfg.id)) {
+      this.configsMap.set(cfg.id, cfg);
+    }
 
     if (!cfg.timedFn) {
       cfg.timedFn = debounce(
