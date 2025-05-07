@@ -1,8 +1,13 @@
-import { IFakerModel } from './model.types.js';
+import type { Faker } from '@faker-js/faker';
 
-export class FakerModel implements IFakerModel {
-  async load(locale: string = 'ru') {
+export class FakerLoader {
+  async load(locale: string = 'ru'): Promise<Faker> {
     const module = await import(`@faker-js/faker/locale/${locale}`);
     return module.faker;
   }
 }
+
+/**
+ * @deprecated use {FakerLoader}
+ */
+export const FakerModel = FakerLoader;
