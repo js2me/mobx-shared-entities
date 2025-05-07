@@ -10,7 +10,7 @@ import {
 } from 'mobx';
 import { resolveFnValue } from 'yummies/common';
 
-import { TimeConfig } from './time.types.js';
+import { TimeConfig } from './model.types.js';
 
 export class Time<TValue = Date> {
   protected abortController: AbortController;
