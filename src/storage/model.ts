@@ -134,3 +134,6 @@ export class StorageModel {
     this.abortController.abort();
   }
 }
+
+export const createStorageModel = (config?: StorageModelConfig) =>
+  new StorageModel(config);

@@ -96,3 +96,7 @@ export class TabManager<T extends TabManagerItem> implements Disposable {
     this.abortController.abort();
   }
 }
+
+export const createTabManager = <T extends TabManagerItem>(
+  config: TabManagerConfig<T>,
+) => new TabManager(config);

@@ -6,7 +6,7 @@ import { TickerConfig } from './model.types.js';
 
 export class Ticker implements Disposable {
   private abortController: AbortController;
-  private intervalId: number | null;
+  private intervalId: ReturnType<typeof setInterval> | null;
 
   ticks: number = 0;
 
@@ -71,3 +71,5 @@ export class Ticker implements Disposable {
     this.abortController.abort();
   }
 }
+
+export const createTicker = (config: TickerConfig) => new Ticker(config);

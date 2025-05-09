@@ -9,12 +9,14 @@ postBuildScript({
   srcDirName: 'src',
   filesToCopy: ['LICENSE', 'README.md'],
   updateVersion: process.env.PUBLISH_VERSION,
-  onDone: (versionsDiff, _, packageJson) => {
+  onDone: (versionsDiff, { $ }, packageJson) => {
     if (process.env.PUBLISH) {
+      $('pnpm test');
+
       publishScript({
         nextVersion: versionsDiff?.next ?? packageJson.version,
         currVersion: versionsDiff?.current,
-        publishCommand: 'pnpm publish',
+        packageManager: 'pnpm',
         commitAllCurrentChanges: true,
         createTag: true,
         githubRepoLink: 'https://github.com/js2me/mobx-shared-entities',

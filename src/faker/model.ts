@@ -7,6 +7,8 @@ export class FakerLoader {
   }
 }
 
+export const createFakerLoader = () => new FakerLoader();
+
 /**
  * @deprecated use {FakerLoader}
  */

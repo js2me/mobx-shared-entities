@@ -96,7 +96,7 @@ export class Socket<
     this.refreshSocketState();
   };
 
-  protected reconnectTimer?: number;
+  protected reconnectTimer?: ReturnType<typeof setTimeout>;
 
   protected scheduleReconnect = () => {
     if (this.reconnectTimer != undefined) {
@@ -189,3 +189,11 @@ export class Socket<
     this.abortController.abort();
   }
 }
+
+export const createSocket = <
+  Payload = void,
+  InputMessageType = any,
+  OutputMessageType = any,
+>(
+  config: SocketConfig<Payload, InputMessageType, OutputMessageType>,
+) => new Socket<Payload, InputMessageType, OutputMessageType>(config);

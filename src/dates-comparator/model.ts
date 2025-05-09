@@ -19,7 +19,7 @@ export class DatesComparator implements DatesComparison {
   minutes: number = 0;
   seconds: number = 0;
 
-  private timeoutId: Maybe<number>;
+  private timeoutId: Maybe<ReturnType<typeof setTimeout>>;
 
   constructor(private config?: DatesComparatorConfig) {
     if (this.config?.dates != null) {
@@ -130,3 +130,6 @@ export class DatesComparator implements DatesComparison {
     this.timeoutId = undefined;
   }
 }
+
+export const createDatesComparator = (config?: DatesComparatorConfig) =>
+  new DatesComparator(config);

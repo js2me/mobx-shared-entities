@@ -16,14 +16,18 @@ export class Time<TValue = Date> {
   protected abortController: AbortController;
   protected atom: IAtom;
   protected updatePer: number;
-  protected intervalId: number;
+  protected intervalId?: ReturnType<typeof setInterval>;
 
   constructor(protected config?: TimeConfig<TValue>) {
-    this.atom = createAtom('');
     this.abortController = new LinkedAbortController(config?.abortSignal);
     this.updatePer = resolveFnValue(config?.updatePer ?? 1000);
+    this.atom = createAtom(
+      'timeAtom',
+      () => this.startInterval(this.updatePer),
+      () => this.stopInterval(),
+    );
 
-    computed.struct(this, 'now');
+    computed.struct(this, 'value');
     observable.ref(this, 'updatePer');
     makeObservable(this);
 
@@ -31,25 +35,19 @@ export class Time<TValue = Date> {
       reaction(
         config.updatePer,
         (updatePer) => {
-          clearTimeout(this.intervalId);
           runInAction(() => {
             this.updatePer = updatePer;
           });
-          this.intervalId = setInterval(
-            () => this.atom.reportChanged(),
-            updatePer,
-          );
+          if (this.intervalId != null) {
+            this.stopInterval();
+            this.startInterval(updatePer);
+          }
         },
         {
           signal: this.abortController.signal,
         },
       );
     }
-
-    this.intervalId = setInterval(
-      () => this.atom.reportChanged(),
-      this.updatePer,
-    );
   }
 
   get ms() {
@@ -71,6 +69,21 @@ export class Time<TValue = Date> {
 
   destroy() {
     this.abortController.abort();
+    this.stopInterval();
+  }
+
+  protected stopInterval() {
     clearInterval(this.intervalId);
+    this.intervalId = undefined;
+  }
+
+  protected startInterval(timeout: number) {
+    runInAction(() => {
+      this.updatePer = timeout;
+    });
+    this.intervalId = setInterval(() => this.atom.reportChanged(), timeout);
   }
 }
+
+export const createTime = <TValue = Date>(config?: TimeConfig<TValue>) =>
+  new Time(config);

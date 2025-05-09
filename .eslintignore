@@ -14,3 +14,5 @@ nginx.conf
 jsconfig.json
 *.json
 .eslintrc.js
+vitest.config.ts
+coverage

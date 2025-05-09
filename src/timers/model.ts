@@ -3,14 +3,19 @@ import { debounce, throttle } from 'lodash-es';
 import { makeObservable, observable } from 'mobx';
 import { generateStackBasedId } from 'yummies/id';
 
-import { TimedCallback, TimerConfig, TimerConfigRaw } from './model.types.js';
+import {
+  TimedCallback,
+  TimerConfig,
+  TimerConfigRaw,
+  TimersConfig,
+} from './model.types.js';
 
 export class Timers {
   private configsMap: Map<string, TimerConfig>;
 
   private abortController: AbortController;
 
-  constructor(config?: { abortSignal?: AbortSignal }) {
+  constructor(config?: TimersConfig) {
     this.abortController = new LinkedAbortController(config?.abortSignal);
 
     this.abortController.signal.addEventListener('abort', () => {
@@ -148,3 +153,5 @@ export class Timers {
     });
   }
 }
+
+export const createTimers = (config?: TimersConfig) => new Timers(config);

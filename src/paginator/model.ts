@@ -161,3 +161,6 @@ export class Paginator implements Disposable {
     this.abortController.abort();
   }
 }
+
+export const createPaginator = (config: PaginatorConfig) =>
+  new Paginator(config);

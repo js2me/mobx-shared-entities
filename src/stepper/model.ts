@@ -59,3 +59,6 @@ export class Stepper<StepData> {
     return this.activeStepIndex !== 0;
   }
 }
+
+export const createStepper = <StepData>(config: StepperConfig<StepData>) =>
+  new Stepper(config);

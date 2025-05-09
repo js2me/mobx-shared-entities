@@ -16,3 +16,7 @@ export type TimerConfigRaw =
   | Partial<PartialKeys<TimerConfig, 'type'>>;
 
 export type TimedCallback = (params: { runAgain: VoidFunction }) => void;
+
+export interface TimersConfig {
+  abortSignal?: AbortSignal;
+}

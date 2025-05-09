@@ -98,3 +98,6 @@ export class TwoColorThemeStore {
     this.storageModel?.destroy();
   }
 }
+
+export const createTwoColorThemeStore = (config?: TwoColorThemeStoreConfig) =>
+  new TwoColorThemeStore(config);
