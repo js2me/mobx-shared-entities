@@ -135,5 +135,6 @@ export class StorageModel {
   }
 }
 
+/*#__PURE__*/
 export const createStorageModel = (config?: StorageModelConfig) =>
   new StorageModel(config);

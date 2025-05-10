@@ -60,5 +60,6 @@ export class Stepper<StepData> {
   }
 }
 
+/*#__PURE__*/
 export const createStepper = <StepData>(config: StepperConfig<StepData>) =>
   new Stepper(config);

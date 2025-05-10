@@ -131,5 +131,6 @@ export class DatesComparator implements DatesComparison {
   }
 }
 
+/*#__PURE__*/
 export const createDatesComparator = (config?: DatesComparatorConfig) =>
   new DatesComparator(config);

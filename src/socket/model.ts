@@ -190,6 +190,7 @@ export class Socket<
   }
 }
 
+/*#__PURE__*/
 export const createSocket = <
   Payload = void,
   InputMessageType = any,

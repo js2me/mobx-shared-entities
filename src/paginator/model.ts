@@ -162,5 +162,6 @@ export class Paginator implements Disposable {
   }
 }
 
+/*#__PURE__*/
 export const createPaginator = (config: PaginatorConfig) =>
   new Paginator(config);
