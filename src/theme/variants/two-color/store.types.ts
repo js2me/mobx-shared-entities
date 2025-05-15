@@ -11,4 +11,12 @@ export interface TwoColorThemeStoreConfig {
    */
   localStorageKey?: string | false;
   fallbackTheme?: Theme;
+  /**
+   * reaction fireImmediately:true
+   */
+  onChangeTheme?: (theme: Theme) => void;
+  /**
+   * reaction fireImmediately:true
+   */
+  onChangeColorScheme?: (colorScheme: ColorScheme) => void;
 }

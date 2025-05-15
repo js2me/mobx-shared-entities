@@ -1,5 +1,5 @@
 import { LinkedAbortController } from 'linked-abort-controller';
-import { action, computed, makeObservable, observable } from 'mobx';
+import { action, computed, makeObservable, observable, reaction } from 'mobx';
 
 import { StorageModel } from '../../../storage/index.js';
 
@@ -46,6 +46,20 @@ export class TwoColorThemeStore {
       ?.addEventListener('change', this.updateMediaColorSchema, {
         signal: this.abortSignal,
       });
+
+    if (config?.onChangeTheme) {
+      reaction(() => this.theme, config.onChangeTheme, {
+        signal: this.abortController.signal,
+        fireImmediately: true,
+      });
+    }
+
+    if (config?.onChangeColorScheme) {
+      reaction(() => this.colorScheme, config.onChangeColorScheme, {
+        signal: this.abortController.signal,
+        fireImmediately: true,
+      });
+    }
   }
 
   get colorScheme() {
