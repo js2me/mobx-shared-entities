@@ -9,3 +9,4 @@ export * from './theme/index.js';
 export * from './ticker/index.js';
 export * from './time/index.js';
 export * from './timers/index.js';
+export * from './model-loader/index.js';
