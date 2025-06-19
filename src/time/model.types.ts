@@ -1,7 +1,7 @@
-import { FnValue } from 'yummies/common';
+import { MaybeFn } from 'yummies/utils/types';
 
 export interface TimeConfig<TValue = Date> {
   abortSignal?: AbortSignal;
-  updatePer?: FnValue<number>;
+  updatePer?: MaybeFn<number>;
   map?: (date: Date) => TValue;
 }

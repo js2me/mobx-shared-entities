@@ -8,7 +8,7 @@ import {
   reaction,
   runInAction,
 } from 'mobx';
-import { resolveFnValue } from 'yummies/common';
+import { callFunction } from 'yummies/common';
 
 import { TimeConfig } from './model.types.js';
 
@@ -20,7 +20,7 @@ export class Time<TValue = Date> {
 
   constructor(protected config?: TimeConfig<TValue>) {
     this.abortController = new LinkedAbortController(config?.abortSignal);
-    this.updatePer = resolveFnValue(config?.updatePer ?? 1000);
+    this.updatePer = callFunction(config?.updatePer ?? 1000);
     this.atom = createAtom(
       'timeAtom',
       () => this.startInterval(this.updatePer),
