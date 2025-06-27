@@ -1,6 +1,6 @@
 import { LinkedAbortController } from 'linked-abort-controller';
 import { debounce, throttle } from 'lodash-es';
-import { makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { generateStackBasedId } from 'yummies/id';
 
 import {
@@ -51,7 +51,7 @@ export class Timers {
 
     if (!cfg.timedFn) {
       cfg.timedFn = throttle(
-        () => {
+        action(() => {
           let runAgainCalled = false;
 
           const result = this.configsMap.get(cfg.id)?.fn({
@@ -66,7 +66,7 @@ export class Timers {
           }
 
           return result;
-        },
+        }),
         cfg.timeout,
         cfg,
       );
@@ -89,7 +89,7 @@ export class Timers {
 
     if (!cfg.timedFn) {
       cfg.timedFn = debounce(
-        () => {
+        action(() => {
           let runAgainCalled = false;
 
           const result = this.configsMap.get(cfg.id)?.fn({
@@ -104,7 +104,7 @@ export class Timers {
           }
 
           return result;
-        },
+        }),
         cfg.timeout,
         cfg,
       );
