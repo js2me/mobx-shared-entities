@@ -97,7 +97,6 @@ export class TabManager<T extends TabManagerItem> implements Disposable {
   }
 }
 
-/*#__PURE__*/
 export const createTabManager = <T extends TabManagerItem>(
   config: TabManagerConfig<T>,
 ) => new TabManager(config);

@@ -7,7 +7,6 @@ export class FakerLoader {
   }
 }
 
-/*#__PURE__*/
 export const createFakerLoader = () => new FakerLoader();
 
 /**

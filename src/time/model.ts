@@ -1,12 +1,12 @@
 import { LinkedAbortController } from 'linked-abort-controller';
 import {
-  computed,
-  createAtom,
-  IAtom,
-  makeObservable,
-  observable,
-  reaction,
-  runInAction,
+    computed,
+    createAtom,
+    IAtom,
+    makeObservable,
+    observable,
+    reaction,
+    runInAction,
 } from 'mobx';
 import { callFunction } from 'yummies/common';
 
@@ -85,6 +85,5 @@ export class Time<TValue = Date> {
   }
 }
 
-/*#__PURE__*/
 export const createTime = <TValue = Date>(config?: TimeConfig<TValue>) =>
   new Time(config);

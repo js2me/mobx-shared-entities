@@ -1,19 +1,19 @@
 import { Disposable } from 'disposer-util';
 import { LinkedAbortController } from 'linked-abort-controller';
 import {
-  action,
-  computed,
-  makeObservable,
-  observable,
-  reaction,
-  runInAction,
+    action,
+    computed,
+    makeObservable,
+    observable,
+    reaction,
+    runInAction,
 } from 'mobx';
 
 import {
-  InputPaginationData,
-  PaginationData,
-  PaginatorConfig,
-  PaginationOffsetData,
+    InputPaginationData,
+    PaginationData,
+    PaginatorConfig,
+    PaginationOffsetData,
 } from './model.types.js';
 
 export class Paginator implements Disposable {
@@ -162,6 +162,5 @@ export class Paginator implements Disposable {
   }
 }
 
-/*#__PURE__*/
 export const createPaginator = (config: PaginatorConfig) =>
   new Paginator(config);
