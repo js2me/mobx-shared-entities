@@ -72,4 +72,5 @@ export class Ticker implements Disposable {
   }
 }
 
-export const createTicker = (config: TickerConfig) => new Ticker(config);
+export const createTicker = /*#__PURE__*/ (config: TickerConfig) =>
+  new Ticker(config);

@@ -1,21 +1,28 @@
 import { LinkedAbortController } from 'linked-abort-controller';
-import { observable, runInAction } from 'mobx';
+import { computed, makeObservable, observable, runInAction } from 'mobx';
 import { AnyObject, Maybe } from 'yummies/utils/types';
 
-import { ModelLoadedState } from './model-loader.types.js';
+import { ModelLoadedState, ModelLoaderOptions } from './model-loader.types.js';
 
-const cacheAccessSymbol = Symbol('[lazy-models]');
+const storageAccessSymbol = Symbol('[lazy-models]');
 
-export class ModelLoader {
+export class ModelLoader<TContext extends AnyObject> {
   private abortController: LinkedAbortController;
 
-  constructor(abortSignal?: AbortSignal) {
-    this.abortController = new LinkedAbortController(abortSignal);
+  private context: TContext;
+
+  constructor(private options: ModelLoaderOptions<TContext>) {
+    this.abortController = new LinkedAbortController(options.abortSignal);
+    this.context = options.context;
+
+    computed.struct(this, 'hasLoadingModels');
+
+    makeObservable(this);
   }
 
-  protected getStorage(context: AnyObject): Map<any, ModelLoadedState> {
-    if (!context[cacheAccessSymbol]) {
-      Object.defineProperty(context, cacheAccessSymbol, {
+  protected get storage(): Map<any, ModelLoadedState> {
+    if (!this.context[storageAccessSymbol]) {
+      Object.defineProperty(this.context, storageAccessSymbol, {
         configurable: false,
         enumerable: false,
         writable: false,
@@ -23,63 +30,65 @@ export class ModelLoader {
       });
 
       this.abortController.signal.addEventListener('abort', () => {
-        if (context[cacheAccessSymbol]) {
-          context[cacheAccessSymbol].clear();
+        if (this.context[storageAccessSymbol]) {
+          this.context[storageAccessSymbol].clear();
         }
       });
     }
 
-    return context[cacheAccessSymbol];
+    return this.context[storageAccessSymbol];
   }
 
-  connect<
-    TContext extends AnyObject,
-    TProperty extends keyof TContext,
-    TModel,
-  >({
-    context,
+  connect<TProperty extends keyof TContext, TModel>({
     property,
     fn,
   }: {
-    context: TContext;
     property: TProperty;
     fn: () => Promise<TModel>;
   }): Maybe<TModel> {
-    const storage = this.getStorage(context);
-
     runInAction(() => {
-      storage.set(property, {
+      this.storage.set(property, {
         property,
         fn,
       });
     });
 
-    fn().then((data) => {
-      if (this.abortController.signal.aborted) {
-        return;
-      }
+    fn()
+      .then((data) => {
+        if (this.abortController.signal.aborted) {
+          return;
+        }
 
-      runInAction(() => {
-        storage.set(property, {
-          property,
-          fn,
-          data,
+        runInAction(() => {
+          this.storage.set(property, {
+            property,
+            fn,
+            data,
+          });
+
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          context[property] = data;
         });
-
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        context[property] = data;
-      });
-    });
+      })
+      .catch((error) => this.handleLoadModelFailed(error));
 
     return null;
   }
 
-  isLoading<TContext extends AnyObject, TProperty extends keyof TContext>(
-    context: TContext,
-    property: TProperty,
-  ): boolean {
-    const storage = this.getStorage(context);
-    return storage.get(property)?.data == null;
+  protected handleLoadModelFailed(e: any) {
+    this.options.onLoadFailed?.(e);
+  }
+
+  get hasLoadingModels() {
+    return [...this.storage.values()].some((it) => it.data == null);
+  }
+
+  isLoading<TProperty extends keyof TContext>(property: TProperty): boolean {
+    return this.storage.get(property)?.data == null;
   }
 }
+
+export const createModelLoader = /*#__PURE__*/ <TContext extends AnyObject>(
+  options: ModelLoaderOptions<TContext>,
+) => new ModelLoader(options);

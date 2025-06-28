@@ -135,5 +135,5 @@ export class StorageModel {
   }
 }
 
-export const createStorageModel = (config?: StorageModelConfig) =>
+export const createStorageModel = /*#__PURE__*/ (config?: StorageModelConfig) =>
   new StorageModel(config);

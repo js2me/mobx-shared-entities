@@ -113,5 +113,6 @@ export class TwoColorThemeStore {
   }
 }
 
-export const createTwoColorThemeStore = (config?: TwoColorThemeStoreConfig) =>
-  new TwoColorThemeStore(config);
+export const createTwoColorThemeStore = /*#__PURE__*/ (
+  config?: TwoColorThemeStoreConfig,
+) => new TwoColorThemeStore(config);
