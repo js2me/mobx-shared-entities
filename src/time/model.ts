@@ -1,12 +1,12 @@
 import { LinkedAbortController } from 'linked-abort-controller';
 import {
-    computed,
-    createAtom,
-    IAtom,
-    makeObservable,
-    observable,
-    reaction,
-    runInAction,
+  computed,
+  createAtom,
+  IAtom,
+  makeObservable,
+  observable,
+  reaction,
+  runInAction,
 } from 'mobx';
 import { callFunction } from 'yummies/common';
 

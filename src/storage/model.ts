@@ -2,10 +2,10 @@ import { LinkedAbortController } from 'linked-abort-controller';
 import { autorun, makeObservable, runInAction } from 'mobx';
 
 import {
-    type StorageModelConfig,
-    type GetFromStorageParams,
-    type SetToStorageParams,
-    type SyncWithStorageParams,
+  type StorageModelConfig,
+  type GetFromStorageParams,
+  type SetToStorageParams,
+  type SyncWithStorageParams,
 } from './model.types.js';
 
 export class StorageModel {

@@ -3,11 +3,11 @@ import { timeDuration } from 'yummies/date-time';
 import { Maybe } from 'yummies/utils/types';
 
 import {
-    DatesComparison,
-    DatesComparatorConfig,
-    DatesToCompare,
-    ResolvedCompareDateType,
-    CompareDateType,
+  DatesComparison,
+  DatesComparatorConfig,
+  DatesToCompare,
+  ResolvedCompareDateType,
+  CompareDateType,
 } from './model.types.js';
 
 /**
