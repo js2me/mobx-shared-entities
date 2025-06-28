@@ -89,6 +89,6 @@ export class ModelLoader<TContext extends AnyObject> {
   }
 }
 
-export const createModelLoader = /*#__PURE__*/ <TContext extends AnyObject>(
+export const createModelLoader = <TContext extends AnyObject>(
   options: ModelLoaderOptions<TContext>,
 ) => new ModelLoader(options);

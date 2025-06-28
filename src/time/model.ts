@@ -85,6 +85,5 @@ export class Time<TValue = Date> {
   }
 }
 
-export const createTime = /*#__PURE__*/ <TValue = Date>(
-  config?: TimeConfig<TValue>,
-) => new Time(config);
+export const createTime = <TValue = Date>(config?: TimeConfig<TValue>) =>
+  new Time(config);

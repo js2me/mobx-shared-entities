@@ -154,5 +154,4 @@ export class Timers {
   }
 }
 
-export const createTimers = /*#__PURE__*/ (config?: TimersConfig) =>
-  new Timers(config);
+export const createTimers = (config?: TimersConfig) => new Timers(config);
