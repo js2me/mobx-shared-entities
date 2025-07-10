@@ -1,6 +1,13 @@
 import { Disposable } from 'disposer-util';
 import { LinkedAbortController } from 'linked-abort-controller';
-import { action, autorun, makeObservable, observable, runInAction } from 'mobx';
+import {
+  action,
+  makeObservable,
+  observable,
+  reaction,
+  runInAction,
+} from 'mobx';
+import { callFunction } from 'yummies/common';
 
 import { TabManagerConfig, TabManagerItem } from './model.types.js';
 
@@ -10,7 +17,8 @@ export class TabManager<T extends TabManagerItem> implements Disposable {
   private syncedActiveTab!: T['id'];
 
   tabs!: T[];
-  tabsMap!: Map<T['id'], T>;
+
+  protected tabIndexesMap!: Map<T['id'], number>;
 
   constructor(private config: TabManagerConfig<T>) {
     this.abortController = new LinkedAbortController(config.abortSignal);
@@ -23,46 +31,28 @@ export class TabManager<T extends TabManagerItem> implements Disposable {
       });
     }
 
-    this.setTabs(this.getTabs());
-
     observable.ref(this, 'syncedActiveTab');
     action(this, 'setTabs');
     observable.ref(this, 'tabs');
+    observable.ref(this, 'tabIndexesMap');
 
     makeObservable(this);
 
-    if (typeof this.config.tabs === 'function') {
-      autorun(
-        () => {
-          this.setTabs(this.getTabs());
-        },
-        {
-          signal: this.abortController.signal,
-        },
-      );
-    }
+    reaction(
+      () => callFunction(this.config.tabs),
+      (tabs) => this.setTabs(tabs ?? []),
+      { signal: this.abortController.signal, fireImmediately: true },
+    );
   }
-
-  private getTabs = () => {
-    if (typeof this.config.tabs === 'function') {
-      return this.config.tabs();
-    }
-    return this.config.tabs;
-  };
 
   setTabs = (tabs: T[]) => {
     this.tabs = tabs;
-
-    this.tabsMap = observable.map<T['id'], T>(
-      this.tabs.map((tab) => [tab.id, tab]),
-      {
-        deep: false,
-      },
-    );
+    this.tabIndexesMap = new Map(this.tabs.map((tab, i) => [tab.id, i]));
   };
 
   getTabData = (tabId: T['id']): T => {
-    return this.tabsMap.get(tabId)!;
+    const index = this.tabIndexesMap.get(tabId)!;
+    return this.tabs[index];
   };
 
   get activeTab() {
@@ -95,7 +85,14 @@ export class TabManager<T extends TabManagerItem> implements Disposable {
     }
   };
 
+  /**
+   * @deprecated use {`destroy()`}
+   */
   dispose() {
+    this.destroy();
+  }
+
+  destroy() {
     this.abortController.abort();
   }
 }

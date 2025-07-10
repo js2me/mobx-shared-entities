@@ -1,9 +1,10 @@
 import { IDisposer } from 'disposer-util';
+import { Maybe, MaybeFn } from 'yummies/utils/types';
 
 export type TabManagerItem = { id: string | number | boolean };
 
 export interface TabManagerConfig<T extends TabManagerItem> {
-  tabs: T[] | (() => T[]);
+  tabs: MaybeFn<Maybe<T[]>>;
   /**
    * @deprecated please use {abortSignal} instead
    */
