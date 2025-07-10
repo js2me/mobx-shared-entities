@@ -55,6 +55,9 @@ export class TabManager<T extends TabManagerItem> implements Disposable {
 
     this.tabsMap = observable.map<T['id'], T>(
       this.tabs.map((tab) => [tab.id, tab]),
+      {
+        deep: false,
+      },
     );
   };
 
