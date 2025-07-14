@@ -1,8 +1,9 @@
 import { AnyObject } from 'yummies/utils/types';
 
 export interface ModelLoadedState {
-  property: any;
+  key: any;
   data?: any;
+  error?: any;
   fn: () => Promise<any>;
 }
 
@@ -13,5 +14,6 @@ export interface ModelLoaderOptions<TContext extends AnyObject> {
    */
   context: TContext;
   abortSignal?: AbortSignal;
-  onLoadFailed?: (e: any) => void;
+  onLoadFailed?: (error: any, property: any) => void;
+  onLoadSucceed?: (data: any, property: any) => void;
 }
