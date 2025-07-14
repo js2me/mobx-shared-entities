@@ -72,6 +72,30 @@ export class ModelLoader<TContext extends AnyObject> {
   }: {
     property: TProperty;
     fn: () => Promise<TModel>;
+  }): TModel | null;
+
+  /**
+   * Connects a model loader to a property of the context.
+   * This method will automatically load the model when the property is accessed.
+   */
+  connect<TModel>({
+    property,
+    fn,
+  }: {
+    property: string;
+    fn: () => Promise<TModel>;
+  }): TModel | null;
+
+  /**
+   * Connects a model loader to a property of the context.
+   * This method will automatically load the model when the property is accessed.
+   */
+  connect<TProperty extends keyof TContext, TModel>({
+    property,
+    fn,
+  }: {
+    property: TProperty;
+    fn: () => Promise<TModel>;
   }): TModel | null {
     return this.load(property, fn);
   }
