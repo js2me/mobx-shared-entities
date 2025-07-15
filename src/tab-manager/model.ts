@@ -2,6 +2,7 @@ import { Disposable } from 'disposer-util';
 import { LinkedAbortController } from 'linked-abort-controller';
 import {
   action,
+  computed,
   makeObservable,
   observable,
   reaction,
@@ -33,6 +34,8 @@ export class TabManager<T extends TabManagerItem> implements Disposable {
 
     observable.ref(this, 'syncedActiveTab');
     action(this, 'setTabs');
+    computed.struct(this, 'activeTab');
+    computed.struct(this, 'activeTabData');
     observable.ref(this, 'tabs');
     observable.ref(this, 'tabIndexesMap');
 
