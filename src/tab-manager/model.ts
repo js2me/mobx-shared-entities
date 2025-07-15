@@ -82,6 +82,10 @@ export class TabManager<T extends TabManagerItem> implements Disposable {
   }
 
   setActiveTab = (activeTabId: T['id']) => {
+    if (this.activeTabData.id === activeTabId) {
+      return;
+    }
+
     if (this.config.getActiveTab && this.config.onChangeActiveTab) {
       this.config.onChangeActiveTab(activeTabId, this.activeTabData);
     } else {
