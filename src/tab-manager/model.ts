@@ -15,7 +15,10 @@ import { TabManagerConfig, TabManagerItem } from './model.types.js';
 export class TabManager<T extends TabManagerItem> implements Disposable {
   private abortController: AbortController;
 
-  private syncedActiveTab!: T['id'];
+  /**
+   * This is needed ONLY WHEN `getActiveTab` IS NOT SET
+   */
+  private localActiveTab!: T['id'];
 
   tabs!: T[];
 
@@ -61,7 +64,7 @@ export class TabManager<T extends TabManagerItem> implements Disposable {
   get activeTab() {
     const tabId = this.config.getActiveTab
       ? this.config.getActiveTab()
-      : this.syncedActiveTab;
+      : this.localActiveTab;
 
     const activeTabId = tabId ?? this.config.fallbackTab;
 
@@ -80,10 +83,10 @@ export class TabManager<T extends TabManagerItem> implements Disposable {
 
   setActiveTab = (activeTabId: T['id']) => {
     if (this.config.getActiveTab && this.config.onChangeActiveTab) {
-      this.config.onChangeActiveTab(activeTabId);
+      this.config.onChangeActiveTab(activeTabId, this.activeTabData);
     } else {
       runInAction(() => {
-        this.syncedActiveTab = activeTabId;
+        this.localActiveTab = activeTabId;
       });
     }
   };

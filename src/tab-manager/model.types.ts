@@ -12,5 +12,5 @@ export interface TabManagerConfig<T extends TabManagerItem> {
   abortSignal?: AbortSignal;
   fallbackTab: T['id'];
   getActiveTab?: () => T['id'] | null | undefined;
-  onChangeActiveTab?: (activeTab: T['id']) => void;
+  onChangeActiveTab?: (nextActiveTab: T['id'], currentActiveTabData: T) => void;
 }
