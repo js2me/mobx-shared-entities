@@ -12,7 +12,9 @@ import { callFunction } from 'yummies/common';
 
 import { TabManagerConfig, TabManagerItem } from './model.types.js';
 
-export class TabManager<T extends TabManagerItem> implements Disposable {
+export class TabManager<T extends TabManagerItem | Readonly<TabManagerItem>>
+  implements Disposable
+{
   private abortController: AbortController;
 
   /**
