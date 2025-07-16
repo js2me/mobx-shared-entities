@@ -20,7 +20,7 @@ export class TabManager<T extends TabManagerItem> implements Disposable {
    */
   private localActiveTab!: T['id'];
 
-  tabs!: T[];
+  tabs!: ReadonlyArray<T> | Array<T>;
 
   protected tabIndexesMap!: Map<T['id'], number>;
 
@@ -51,7 +51,7 @@ export class TabManager<T extends TabManagerItem> implements Disposable {
     );
   }
 
-  setTabs = (tabs: T[]) => {
+  setTabs = (tabs: Array<T> | ReadonlyArray<T>) => {
     this.tabs = tabs;
     this.tabIndexesMap = new Map(this.tabs.map((tab, i) => [tab.id, i]));
   };
