@@ -1,4 +1,3 @@
-import { Disposable } from 'disposer-util';
 import { LinkedAbortController } from 'linked-abort-controller';
 import {
   action,
@@ -12,9 +11,7 @@ import { callFunction } from 'yummies/common';
 
 import { TabManagerConfig, TabManagerItem } from './model.types.js';
 
-export class TabManager<T extends TabManagerItem | Readonly<TabManagerItem>>
-  implements Disposable
-{
+export class TabManager<T extends TabManagerItem | Readonly<TabManagerItem>> {
   private abortController: AbortController;
 
   /**
@@ -28,14 +25,6 @@ export class TabManager<T extends TabManagerItem | Readonly<TabManagerItem>>
 
   constructor(private config: TabManagerConfig<T>) {
     this.abortController = new LinkedAbortController(config.abortSignal);
-
-    // eslint-disable-next-line sonarjs/deprecation
-    if (config.disposer) {
-      // eslint-disable-next-line sonarjs/deprecation
-      config.disposer.add(() => {
-        this.abortController.abort();
-      });
-    }
 
     observable.ref(this, 'syncedActiveTab');
     action(this, 'setTabs');
@@ -96,13 +85,6 @@ export class TabManager<T extends TabManagerItem | Readonly<TabManagerItem>>
       });
     }
   };
-
-  /**
-   * @deprecated use {`destroy()`}
-   */
-  dispose() {
-    this.destroy();
-  }
 
   destroy() {
     this.abortController.abort();

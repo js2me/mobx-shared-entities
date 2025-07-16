@@ -1,4 +1,3 @@
-import { Disposable } from 'disposer-util';
 import { LinkedAbortController } from 'linked-abort-controller';
 import {
   action,
@@ -16,7 +15,7 @@ import {
   PaginationOffsetData,
 } from './model.types.js';
 
-export class Paginator implements Disposable {
+export class Paginator {
   private abortController: AbortController;
   private page: number;
 
@@ -31,17 +30,9 @@ export class Paginator implements Disposable {
     pageSize,
     pagesCount,
     pageSizes,
-    // eslint-disable-next-line sonarjs/deprecation
-    disposer,
     abortSignal,
   }: PaginatorConfig) {
     this.abortController = new LinkedAbortController(abortSignal);
-
-    if (disposer) {
-      disposer.add(() => {
-        this.abortController.abort();
-      });
-    }
 
     this.page = page ?? 1;
     this.pageSize = pageSize ?? pageSizes[0] ?? 10;
@@ -157,7 +148,7 @@ export class Paginator implements Disposable {
     return this.createOffsetData(this.data);
   }
 
-  dispose(): void {
+  destroy() {
     this.abortController.abort();
   }
 }

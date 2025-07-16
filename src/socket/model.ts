@@ -1,4 +1,3 @@
-import { Disposable } from 'disposer-util';
 import { LinkedAbortController } from 'linked-abort-controller';
 import { action, makeObservable, observable } from 'mobx';
 
@@ -8,8 +7,7 @@ export class Socket<
   Payload = void,
   InputMessageType = any,
   OutputMessageType = any,
-> implements Disposable
-{
+> {
   private abortController: AbortController;
   private instance: WebSocket | null = null;
 
@@ -35,14 +33,6 @@ export class Socket<
     private config: SocketConfig<Payload, InputMessageType, OutputMessageType>,
   ) {
     this.abortController = new LinkedAbortController(config.abortSignal);
-
-    // eslint-disable-next-line sonarjs/deprecation
-    if (config.disposer) {
-      // eslint-disable-next-line sonarjs/deprecation
-      config.disposer.add(() => {
-        this.abortController.abort();
-      });
-    }
 
     this.serializeOutputMessage =
       this.config.serializeOutputMessage ||
@@ -185,7 +175,7 @@ export class Socket<
     }
   };
 
-  dispose() {
+  destroy() {
     this.abortController.abort();
   }
 }

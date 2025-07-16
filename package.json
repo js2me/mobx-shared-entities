@@ -1,6 +1,6 @@
 {
   "name": "mobx-shared-entities",
-  "version": "5.3.3",
+  "version": "6.0.0",
   "scripts": {
     "clean": "rimraf dist",
     "check": "eslint . --fix",
@@ -22,22 +22,21 @@
   "description": "",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/js2me/mobx-shared-entities/issues"
+    "url": "https://github.com/js2me/mobx-swiss-knife/issues"
   },
-  "homepage": "https://github.com/js2me/mobx-shared-entities",
+  "homepage": "https://github.com/js2me/mobx-swiss-knife",
   "repository": {
     "type": "git",
-    "url": "git://github.com/js2me/mobx-shared-entities"
+    "url": "git://github.com/js2me/mobx-swiss-knife"
   },
   "dependencies": {
     "@faker-js/faker": "^9.6.0",
     "@types/lodash-es": "^4.17.12",
     "linked-abort-controller": "^1.1.0",
     "lodash-es": "^4.17.21",
-    "yummies": "^4.0.0"
+    "yummies": "^4.5.0"
   },
   "peerDependencies": {
-    "disposer-util": "^2.0.1",
     "mobx": "^6.12.4"
   },
   "devDependencies": {
@@ -46,7 +45,7 @@
     "@vitest/coverage-istanbul": "^3.1.3",
     "eslint": "^8.57.1",
     "js2me-eslint-config": "^1.0.8",
-    "js2me-exports-post-build-script": "^3.0.1",
+    "js2me-exports-post-build-script": "^4.1.5",
     "jsdom": "^26.1.0",
     "rimraf": "^6.0.1",
     "typescript": "^5.8.3",

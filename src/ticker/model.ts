@@ -1,10 +1,9 @@
-import { Disposable } from 'disposer-util';
 import { LinkedAbortController } from 'linked-abort-controller';
 import { action, makeObservable, observable, reaction } from 'mobx';
 
 import { TickerConfig } from './model.types.js';
 
-export class Ticker implements Disposable {
+export class Ticker {
   private abortController: AbortController;
   private intervalId: ReturnType<typeof setInterval> | null;
 
@@ -16,14 +15,6 @@ export class Ticker implements Disposable {
 
   constructor(config: TickerConfig) {
     this.abortController = new LinkedAbortController(config.abortSignal);
-
-    // eslint-disable-next-line sonarjs/deprecation
-    if (config.disposer) {
-      // eslint-disable-next-line sonarjs/deprecation
-      config.disposer.add(() => {
-        this.abortController.abort();
-      });
-    }
 
     this.ticksPer = config.ticksPer;
     this.intervalId = null;
@@ -66,7 +57,7 @@ export class Ticker implements Disposable {
     this.ticks = 0;
   }
 
-  dispose() {
+  destroy() {
     this.reset();
     this.abortController.abort();
   }
