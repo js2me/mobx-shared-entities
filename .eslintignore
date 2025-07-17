@@ -16,3 +16,8 @@ jsconfig.json
 .eslintrc.js
 vitest.config.ts
 coverage
+.eslintrc.cjs
+post-build.mjs
+vitest.config.ts
+setupTests.js
+docs
