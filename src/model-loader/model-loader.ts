@@ -1,6 +1,6 @@
 import { LinkedAbortController } from 'linked-abort-controller';
 import { action, computed, makeObservable, observable } from 'mobx';
-import { AnyObject } from 'yummies/utils/types';
+import { AnyObject, Maybe } from 'yummies/utils/types';
 
 import { ModelLoadedState, ModelLoaderOptions } from './model-loader.types.js';
 
@@ -49,17 +49,18 @@ export class ModelLoader<TContext extends AnyObject> {
    * Loads a model and stores it in the context.
    * The model is loaded by calling the provided function.
    */
-  load<TModel>(key: keyof any, fn: () => Promise<TModel>) {
+  load<TModel>(
+    key: keyof any,
+    fn: () => Promise<TModel>,
+  ): Promise<Maybe<TModel>> {
     this.storage.set(key, {
       key,
       fn,
     });
 
-    fn()
+    return fn()
       .then((data) => this.handleLoadModelSucceed(data, fn, key))
       .catch((error) => this.handleLoadModelFailed(error, fn, key));
-
-    return null;
   }
 
   /**
@@ -97,7 +98,8 @@ export class ModelLoader<TContext extends AnyObject> {
     property: TProperty;
     fn: () => Promise<TModel>;
   }): TModel | null {
-    return this.load(property, fn);
+    this.load(property, fn);
+    return null;
   }
 
   protected handleLoadModelSucceed(
@@ -120,6 +122,8 @@ export class ModelLoader<TContext extends AnyObject> {
     context[property] = data;
 
     this.options.onLoadSucceed?.(data, property);
+
+    return data;
   }
 
   protected handleLoadModelFailed(
