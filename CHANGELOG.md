@@ -1,5 +1,11 @@
 # mobx-swiss-knife
 
+## 1.1.1
+
+### Patch Changes
+
+- [`5d3b904`](https://github.com/js2me/mobx-swiss-knife/commit/5d3b9041730946e0f3a5bbf60030d9afa6bff1dc) Thanks [@js2me](https://github.com/js2me)! - improve model loader (load method returns promise)
+
 ## 1.1.0
 
 ### Minor Changes
